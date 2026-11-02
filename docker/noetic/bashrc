@@ -1,0 +1,7 @@
+# ROS Noetic container environment (loaded from ~/.bashrc)
+export PATH="$HOME/.local/bin:$PATH"
+export DISPLAY=:1   # windows (Gazebo, rviz, rqt, imshow) open on the noVNC desktop
+source /opt/ros/noetic/setup.bash
+[ -f "$HOME/catkin_ws/devel/setup.bash" ] && source "$HOME/catkin_ws/devel/setup.bash"
+export ROS_MASTER_URI=http://localhost:11311
+export ROS_HOSTNAME=localhost

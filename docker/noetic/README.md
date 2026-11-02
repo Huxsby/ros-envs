@@ -1,0 +1,61 @@
+# ROS Noetic in the browser, with Docker
+
+**English** · [Español](README.es.md)
+
+The Noetic environment in a server container, used from a browser. It suits a machine without a local install, such as a tablet.
+
+| Service | Port in the container | Use |
+|---|---|---|
+| code-server | 8443 | VS Code in the browser and terminal |
+| noVNC | 6080 | Desktop: Gazebo, rviz, rqt, smach_viewer |
+
+The home folder is a volume: repositories, `catkin_ws`, the `gh` session and extensions survive a new image. What `apt` installs inside the container does not; add it to the `Dockerfile`.
+
+## Start it
+
+```bash
+cp .env.example .env    # then set CODE_PASSWORD
+docker compose up -d
+```
+
+`CODE_PASSWORD` is required: without it the container refuses to start, instead of opening code-server to anyone. Both ports are published on `127.0.0.1` of the server only.
+
+The image is `ghcr.io/huxsby/ros-envs-noetic`, built by [`image.yml`](../../.github/workflows/image.yml). To build it locally: `docker build -t ghcr.io/huxsby/ros-envs-noetic:latest .` and `docker compose up -d --pull never`.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `CODE_PASSWORD` | required | Password of code-server |
+| `VNC_PASSWORD` | empty | Second password for noVNC; only 8 characters count |
+| `VNC_GEOMETRY` | `1600x1000` | Desktop size |
+| `TZ` | `Etc/UTC` | Time zone |
+
+To use another user name, change both `CONTAINER_USER` and the volume destination in `docker-compose.yml`, because they must match.
+
+## Connect
+
+An SSH tunnel is the simplest way:
+
+```bash
+ssh -N -L 8443:localhost:8443 -L 6080:localhost:6080 <user>@<server>
+```
+
+- VS Code: `http://localhost:8443`
+- Desktop: `http://localhost:6080/vnc.html?autoconnect=1&resize=remote`
+
+To reach it from any network, put an HTTPS reverse proxy in front of code-server only, and use a long random `CODE_PASSWORD`. noVNC does not need its own domain: it can be reached through the code-server port proxy, behind its login, at `/proxy/6080/vnc.html?path=proxy/6080/websockify&autoconnect=1&resize=remote`. Do not rely on `VNC_PASSWORD` alone, since 8 characters are not enough to expose it.
+
+## First time inside
+
+```bash
+gh auth login && gh auth setup-git
+git clone https://github.com/Huxsby/ros-envs.git ~/projects/ros-envs
+bash ~/projects/ros-envs/ros/noetic/smoke-test.sh    # must end in SMOKE TEST OK
+```
+
+## Daily use
+
+- **Terminal.** The `bash` of VS Code loads ROS, `catkin_ws` and `DISPLAY=:1`, so `roslaunch` works without `source`, and windows open on the noVNC desktop.
+- **Long processes.** Run them in `tmux`: a browser terminal can be cut off if the device locks or the tab closes.
+- **Without a GPU.** The desktop renders on the CPU (llvmpipe), so Gazebo's window is slow. Simulations with `gui:=false` are not affected when the laser is `type="ray"`.
+- **Videos.** `ffmpeg -f x11grab -video_size 1600x1000 -i :1 video.mp4`, inside the container.
+- **Limits.** 5 GB of memory and 3.5 CPUs, set in `docker-compose.yml`.
