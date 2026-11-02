@@ -40,7 +40,6 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User alex 
 | `-User` | yes | | Lowercase letters, digits, `_` and `-`, starting with a letter or `_` | Linux user to create, which becomes the default user of the distro |
 | `-TimeZone` | no | `Etc/UTC` | A *TZ identifier* from the [list of time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), such as `Europe/Madrid` | Time zone of the distro |
 | `-Location` | no | `%UserProfile%\WSL` | Any folder | Where the virtual disk goes, in a subfolder with the name of the distro |
-| `-WslVersion` | no | `2` | `1`, `2` | WSL version of the distro. Jazzy only works on `2`, because systemd on Ubuntu 24.04 needs file locks that WSL 1 lacks |
 | `-Ref` | no | the release of the script | A tag, branch or commit of this repository | Version to install |
 | `-NoPassword` | no | off | No value, it is a switch | Skips the password prompt, for unattended runs. The user then has no `sudo` password: set one later with `wsl -d ROS-Jazzy -u root passwd <user>` |
 
@@ -73,7 +72,6 @@ wsl -d ROS-Jazzy
 ```
 
 ```bash
-gh auth login && gh auth setup-git    # log in to GitHub and use that login for git
 git clone https://github.com/Huxsby/ros-envs.git
 bash ros-envs/ros/jazzy/smoke-test.sh # must end in SMOKE TEST OK
 ```

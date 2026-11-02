@@ -167,13 +167,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { distro: noetic, wsl: 1 }
-          - { distro: jazzy, wsl: 2 }   # systemd on Ubuntu 24.04 does not work on WSL 1
+        distro: [noetic, jazzy]
     steps:
       - uses: actions/checkout@v5
       - name: Install ${{ matrix.distro }} through wsl/install.ps1
         shell: pwsh
         run: |
           wsl.exe --update
-          .\wsl\install.ps1 -Distro ${{ matrix.distro }} -User ci -WslVersion ${{ matrix.wsl }} -Ref ${{ github.sha }} -NoPassword
+          .\wsl\install.ps1 -Distro ${{ matrix.distro }} -User ci -Ref ${{ github.sha }} -NoPassword
+          wsl.exe --list --verbose

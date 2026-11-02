@@ -1,21 +1,17 @@
 # Creates a WSL distro with a ROS environment: ROS-Noetic (Ubuntu 20.04) or ROS-Jazzy (Ubuntu 24.04).
 # Usage, in PowerShell:
-#   .\install.ps1 -Distro noetic -User <linux user> [-TimeZone Area/City] [-Location C:\WSL] [-WslVersion 2] [-Ref v1.0.0]
+#   .\install.ps1 -Distro noetic -User <linux user> [-TimeZone Area/City] [-Location C:\WSL] [-Ref v1.0.0]
 # It downloads what it needs to a temporary folder and deletes it at the end.
 param(
     [Parameter(Mandatory)][ValidateSet('noetic', 'jazzy')][string]$Distro,
     [Parameter(Mandatory)][ValidatePattern('^[a-z_][a-z0-9_-]*$')][string]$User,
     [ValidatePattern('^[A-Za-z0-9_+/-]+$')][string]$TimeZone = 'Etc/UTC',
     [string]$Location = (Join-Path $env:USERPROFILE 'WSL'),
-    [ValidateSet(1, 2)][int]$WslVersion = 2,
     [string]$Ref = 'v1.0.0',
     # Without a password prompt, for unattended runs such as CI
     [switch]$NoPassword
 )
 $ErrorActionPreference = 'Stop'
-
-# systemd on Ubuntu 24.04 uses file locks that WSL 1 lacks: it fails with "Failed to take /etc/passwd lock"
-if ($Distro -eq 'jazzy' -and $WslVersion -eq 1) { throw 'Jazzy needs WSL 2: use -WslVersion 2' }
 
 $Name = "ROS-$((Get-Culture).TextInfo.ToTitleCase($Distro))"
 $Installer = "https://raw.githubusercontent.com/Huxsby/ros-envs/$Ref/install.sh"
@@ -50,7 +46,7 @@ try {
     Write-Host "== Importing $Name into $Location"
     $Target = Join-Path $Location $Name
     New-Item -ItemType Directory -Force -Path $Target | Out-Null
-    Invoke-Wsl --import $Name $Target $Image --version $WslVersion
+    Invoke-Wsl --import $Name $Target $Image --version 2
 
     Write-Host '== Root step: user, repositories and packages'
     # Set in the environment so that it applies to whatever ref the installer was pinned to

@@ -57,7 +57,6 @@ Para llegar desde cualquier red, pon un proxy inverso con HTTPS solo delante de 
 ## Primera vez dentro
 
 ```bash
-gh auth login && gh auth setup-git
 git clone https://github.com/Huxsby/ros-envs.git ~/projects/ros-envs
 bash ~/projects/ros-envs/ros/noetic/smoke-test.sh    # debe acabar en SMOKE TEST OK
 ```

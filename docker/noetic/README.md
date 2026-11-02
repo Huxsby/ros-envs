@@ -57,7 +57,6 @@ To reach it from any network, put an HTTPS reverse proxy in front of code-server
 ## First time inside
 
 ```bash
-gh auth login && gh auth setup-git
 git clone https://github.com/Huxsby/ros-envs.git ~/projects/ros-envs
 bash ~/projects/ros-envs/ros/noetic/smoke-test.sh    # must end in SMOKE TEST OK
 ```
