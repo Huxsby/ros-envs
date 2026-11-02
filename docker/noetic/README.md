@@ -14,9 +14,17 @@ The home folder is a volume: repositories, `catkin_ws`, the `gh` session and ext
 ## Start it
 
 ```bash
-cp .env.example .env    # then set CODE_PASSWORD
+git clone https://github.com/Huxsby/ros-envs.git && cd ros-envs/docker/noetic
+cp .env.example .env    # then set CODE_PASSWORD in .env
 docker compose up -d
 ```
+
+| Command | What it does |
+|---|---|
+| `cp .env.example .env` | Creates the file with your settings. Git ignores it, so the passwords are not uploaded |
+| `docker compose up -d` | Downloads the image and starts the container in the background (`-d`) |
+| `docker compose logs -f` | Follows its output, to see why it does not start |
+| `docker compose down` | Stops and removes the container. The volume with the home stays; `down -v` deletes it too |
 
 `CODE_PASSWORD` is required: without it the container refuses to start, instead of opening code-server to anyone. Both ports are published on `127.0.0.1` of the server only.
 
@@ -38,6 +46,8 @@ An SSH tunnel is the simplest way:
 ```bash
 ssh -N -L 8443:localhost:8443 -L 6080:localhost:6080 <user>@<server>
 ```
+
+`-L local:host:remote` forwards a port of your machine to one of the server, and `-N` opens no remote shell. It keeps running while the tunnel is in use.
 
 - VS Code: `http://localhost:8443`
 - Desktop: `http://localhost:6080/vnc.html?autoconnect=1&resize=remote`

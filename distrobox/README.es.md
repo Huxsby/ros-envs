@@ -16,20 +16,53 @@ Cada caja tiene su propia home, así que `.bashrc`, el workspace, `~/.ros` y lo 
 Necesita `sudo apt install distrobox podman` y, para usar NVIDIA, su controlador ya instalado (`nvidia-smi` funciona). Ejecútalo desde una terminal del escritorio, no por ssh, porque `machine.sh` necesita pantalla para probar la GPU:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox noetic
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox jazzy
 ```
 
-Para enlazar un proyecto del anfitrión, lo que además ejecuta `make build` si tiene Makefile, usa un clon:
+### Qué significa el comando
+
+| Parte | Significado |
+|---|---|
+| `curl` | Descarga el instalador y lo escribe en su salida |
+| `-f` | Falla si hay un error HTTP, en vez de pasar la página de error a `bash` |
+| `-s` `-S` | Oculta la barra de progreso, pero sigue mostrando los errores |
+| `-L` | Sigue las redirecciones |
+| `v1.0.0` en la URL | La versión que se descarga. También decide la versión que se instala |
+| `\| bash -s` | Ejecuta lo que escribe `curl`, leyendo el script de la entrada estándar |
+| `--` | Termina las opciones de `bash`: lo que sigue es para el script |
+| `distrobox jazzy` | Orden y entorno: `noetic` o `jazzy` |
+
+Para leer antes el script, o para usar opciones, trabaja desde un clon:
 
 ```bash
-bash install.sh distrobox noetic --link ~/mi-proyecto
+git clone https://github.com/Huxsby/ros-envs.git && cd ros-envs
+bash install.sh distrobox jazzy --link ~/mi-proyecto
 ```
+
+### Opciones
+
+| Opción | Obligatoria | Significado |
+|---|---|---|
+| `noetic`, `jazzy` | sí | Entorno que se instala. Crea la caja `ros-noetic` o `ros-jazzy` |
+| `--link DIR` | no | Enlaza esa carpeta del anfitrión en `~/projects/<nombre>` dentro de la caja y ejecuta `make build` si tiene Makefile |
+| `DBX_FLAGS` | no | Variable de entorno con opciones extra para podman: `DBX_FLAGS="--memory 4g" bash install.sh distrobox jazzy` |
+| `DISTROBOX_HOMES` | no | Variable de entorno con la carpeta de las homes de las cajas. Por defecto, `~/distrobox` |
+| `ROS_ENVS_REF` | no | Variable de entorno con la etiqueta, rama o commit que se descarga cuando no se ejecuta desde un clon |
+
+### Qué hace el script
+
+1. Crea la caja con `--home ~/distrobox/<caja>`, y con `--nvidia` si el anfitrión tiene el controlador.
+2. Genera dentro de la caja el idioma del anfitrión.
+3. Ejecuta `setup-root.sh` con sudo. En una caja se salta lo propio de WSL: el usuario y la zona horaria vienen del anfitrión.
+4. Ejecuta `setup-user.sh`.
+5. Con `--link`, enlaza el proyecto y lo compila.
 
 Si se vuelve a ejecutar, reutiliza la caja y repite la instalación sin romper nada. Después entra en la caja y compruébala:
 
 ```bash
-distrobox enter ros-noetic
-git clone https://github.com/Huxsby/ros-envs.git && bash ros-envs/ros/noetic/smoke-test.sh
+distrobox enter ros-jazzy
+git clone https://github.com/Huxsby/ros-envs.git
+bash ros-envs/ros/jazzy/smoke-test.sh    # debe acabar en SMOKE TEST OK
 ```
 
 ## De WSL a Distrobox

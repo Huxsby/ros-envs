@@ -13,26 +13,41 @@ Noetic and Jazzy cannot share an Ubuntu release: ROS 1 has no packages for 22.04
 
 ## Install
 
-Windows, in PowerShell ([details](wsl/README.md)):
+Each option below has its own guide, with every part of the commands explained.
+
+Windows, in PowerShell ([guide](wsl/README.md)):
 
 ```powershell
 curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/wsl/install.ps1
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro noetic -User <linux user>
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <linux user> -TimeZone <Area/City>
 ```
 
-Linux, with Distrobox ([details](distrobox/README.md)):
+`<Area/City>` is a *TZ identifier* from the [list of time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), such as `Europe/Madrid`.
+
+Linux, with Distrobox ([guide](distrobox/README.md)):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox noetic
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox jazzy
 ```
 
 An Ubuntu 20.04 or 24.04 that is already running, such as a virtual machine:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- ubuntu noetic
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- ubuntu jazzy
 ```
 
-A server, through the browser: see [docker/noetic](docker/noetic/README.md).
+A server, through the browser: see the [Docker guide](docker/noetic/README.md), which only covers Noetic.
+
+### `install.sh`
+
+```text
+install.sh ubuntu <noetic|jazzy>                       on an Ubuntu already running; asks for sudo
+install.sh distrobox <noetic|jazzy> [--link DIR]       on a Linux host: creates a box
+install.sh root <noetic|jazzy> <user> [time zone]      only the root step
+install.sh user <noetic|jazzy>                         only the user step
+```
+
+Pick the environment that matches the Ubuntu: `noetic` needs 20.04 and `jazzy` needs 24.04, and the root step stops on any other release. `root` and `user` are the two halves of `ubuntu`, and `wsl/install.ps1` calls them with a restart in between.
 
 The installers download a fixed release to a temporary folder and delete it when they finish. To read what will run first, clone the repository and call `bash install.sh ...` from it: a clone is used as it is, with nothing downloaded.
 
@@ -81,14 +96,14 @@ Avoid depending on the submodule for basic project commands: `git clone` does no
 
 ## Testing
 
-[`environments.yml`](.github/workflows/environments.yml) runs on every push, for the groups that a change touches, and on all of them once a week, because most breakage comes from outside: expired keys, removed images or changed packages.
+[`environments.yml`](.github/workflows/environments.yml) runs only for the groups that a change touches, never for documentation, and for all of them once a week, because most breakage comes from outside: expired keys, removed images or changed packages. From the Actions tab, *Run workflow* can run a single group. [`secrets.yml`](.github/workflows/secrets.yml) runs `gitleaks` on every push, documentation included, because this repository is public.
 
 | Group | What it proves | What it does not prove |
 |---|---|---|
 | Native | `install.sh` and the smoke tests on plain Ubuntu containers | |
 | Distrobox | `install.sh distrobox`, on podman | GPU access |
 | Docker | Image build, password check, code-server and noVNC answering, smoke test | |
-| WSL | `install.ps1` on a Windows runner, on WSL 1 | WSL 2, WSLg and GPU access. Allowed to fail, because hosted runners do not officially support WSL 2 |
+| WSL | `install.ps1` on a Windows runner: Noetic on WSL 1 and Jazzy on WSL 2 | The smoke tests, WSLg and GPU access. Allowed to fail, because hosted runners do not officially support WSL 2 |
 
 ## Releasing
 

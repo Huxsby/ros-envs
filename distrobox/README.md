@@ -16,20 +16,53 @@ Each box has its own home, so `.bashrc`, the workspace, `~/.ros` and what `pip` 
 Requires `sudo apt install distrobox podman` and, to use NVIDIA, its driver already installed (`nvidia-smi` works). Run it from a desktop terminal, not over ssh, because `machine.sh` needs a display to try the GPU:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox noetic
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox jazzy
 ```
 
-To link a project from the host, which also runs `make build` if it has a Makefile, use a clone:
+### What the command means
+
+| Part | Meaning |
+|---|---|
+| `curl` | Downloads the installer and writes it to its output |
+| `-f` | Fails on an HTTP error, instead of passing the error page to `bash` |
+| `-s` `-S` | Hides the progress bar, but still shows errors |
+| `-L` | Follows redirects |
+| `v1.0.0` in the URL | The release to download. It also decides the version that gets installed |
+| `\| bash -s` | Runs what `curl` writes, reading the script from standard input |
+| `--` | Ends the options of `bash`: what follows goes to the script |
+| `distrobox jazzy` | Command and environment: `noetic` or `jazzy` |
+
+To read the script first, or to use options, work from a clone:
 
 ```bash
-bash install.sh distrobox noetic --link ~/my-project
+git clone https://github.com/Huxsby/ros-envs.git && cd ros-envs
+bash install.sh distrobox jazzy --link ~/my-project
 ```
+
+### Options
+
+| Option | Required | Meaning |
+|---|---|---|
+| `noetic`, `jazzy` | yes | Environment to install. It creates the box `ros-noetic` or `ros-jazzy` |
+| `--link DIR` | no | Links that host folder in `~/projects/<name>` inside the box and runs `make build` if it has a Makefile |
+| `DBX_FLAGS` | no | Environment variable with extra options for podman: `DBX_FLAGS="--memory 4g" bash install.sh distrobox jazzy` |
+| `DISTROBOX_HOMES` | no | Environment variable with the folder for the homes of the boxes. By default, `~/distrobox` |
+| `ROS_ENVS_REF` | no | Environment variable with the tag, branch or commit to download when it does not run from a clone |
+
+### What the script does
+
+1. Creates the box with `--home ~/distrobox/<box>`, and with `--nvidia` if the host has the driver.
+2. Generates the language of the host inside the box.
+3. Runs `setup-root.sh` with sudo. In a box it skips what is specific to WSL: the user and the time zone come from the host.
+4. Runs `setup-user.sh`.
+5. With `--link`, links the project and builds it.
 
 Running it again reuses the box and repeats the installation without breaking anything. Then enter the box and check it:
 
 ```bash
-distrobox enter ros-noetic
-git clone https://github.com/Huxsby/ros-envs.git && bash ros-envs/ros/noetic/smoke-test.sh
+distrobox enter ros-jazzy
+git clone https://github.com/Huxsby/ros-envs.git
+bash ros-envs/ros/jazzy/smoke-test.sh    # must end in SMOKE TEST OK
 ```
 
 ## From WSL to Distrobox

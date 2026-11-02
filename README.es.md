@@ -13,26 +13,41 @@ Noetic y Jazzy no pueden compartir una versión de Ubuntu: ROS 1 no tiene paquet
 
 ## Instalación
 
-En Windows, con PowerShell ([detalles](wsl/README.es.md)):
+Cada opción tiene su propia guía, con todas las partes de los comandos explicadas.
+
+En Windows, con PowerShell ([guía](wsl/README.es.md)):
 
 ```powershell
 curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/wsl/install.ps1
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro noetic -User <usuario de linux>
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usuario de linux> -TimeZone <Area/City>
 ```
 
-En Linux, con Distrobox ([detalles](distrobox/README.es.md)):
+`<Area/City>` es un *TZ identifier* de la [lista de zonas horarias](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), como `Europe/Madrid`.
+
+En Linux, con Distrobox ([guía](distrobox/README.es.md)):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox noetic
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox jazzy
 ```
 
 En un Ubuntu 20.04 o 24.04 ya en marcha, como una máquina virtual:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- ubuntu noetic
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- ubuntu jazzy
 ```
 
-En un servidor, desde el navegador: ver [docker/noetic](docker/noetic/README.es.md).
+En un servidor, desde el navegador: ver la [guía de Docker](docker/noetic/README.es.md), que solo cubre Noetic.
+
+### `install.sh`
+
+```text
+install.sh ubuntu <noetic|jazzy>                       en un Ubuntu ya en marcha; pide sudo
+install.sh distrobox <noetic|jazzy> [--link DIR]       en un anfitrión Linux: crea una caja
+install.sh root <noetic|jazzy> <usuario> [zona]        solo el paso de root
+install.sh user <noetic|jazzy>                         solo el paso de usuario
+```
+
+Elige el entorno que corresponde a tu Ubuntu: `noetic` necesita 20.04 y `jazzy` necesita 24.04, y el paso de root se detiene en cualquier otra versión. `root` y `user` son las dos mitades de `ubuntu`, y `wsl/install.ps1` las llama con un reinicio entre medias.
 
 Los instaladores descargan una versión fija a una carpeta temporal y la borran al terminar. Para leer antes lo que se va a ejecutar, clona el repositorio y llama a `bash install.sh ...` desde él: un clon se usa tal cual, sin descargar nada.
 
@@ -81,14 +96,14 @@ Conviene que los comandos básicos del proyecto no dependan del submódulo: `git
 
 ## Comprobaciones
 
-[`environments.yml`](.github/workflows/environments.yml) se ejecuta en cada push, para los grupos que toca el cambio, y una vez por semana para todos, porque casi todo lo que se rompe viene de fuera: claves caducadas, imágenes retiradas o paquetes que cambian.
+[`environments.yml`](.github/workflows/environments.yml) se ejecuta solo para los grupos que toca el cambio, nunca por documentación, y una vez por semana para todos, porque casi todo lo que se rompe viene de fuera: claves caducadas, imágenes retiradas o paquetes que cambian. Desde la pestaña Actions, *Run workflow* puede lanzar un solo grupo. [`secrets.yml`](.github/workflows/secrets.yml) ejecuta `gitleaks` en cada push, también de documentación, porque este repositorio es público.
 
 | Grupo | Qué demuestra | Qué no demuestra |
 |---|---|---|
 | Nativo | `install.sh` y las pruebas de humo en contenedores Ubuntu limpios | |
 | Distrobox | `install.sh distrobox`, sobre podman | El acceso a la GPU |
 | Docker | Construcción de la imagen, comprobación de la contraseña, respuesta de code-server y noVNC, prueba de humo | |
-| WSL | `install.ps1` en un runner de Windows, sobre WSL 1 | WSL 2, WSLg y el acceso a la GPU. Se permite que falle, porque los runners alojados no admiten WSL 2 de forma oficial |
+| WSL | `install.ps1` en un runner de Windows: Noetic sobre WSL 1 y Jazzy sobre WSL 2 | Las pruebas de humo, WSLg y el acceso a la GPU. Se permite que falle, porque los runners alojados no admiten WSL 2 de forma oficial |
 
 ## Publicar una versión
 

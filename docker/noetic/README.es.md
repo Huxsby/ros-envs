@@ -14,9 +14,17 @@ La carpeta home es un volumen: los repositorios, `catkin_ws`, la sesión de `gh`
 ## Arrancarlo
 
 ```bash
-cp .env.example .env    # y define CODE_PASSWORD
+git clone https://github.com/Huxsby/ros-envs.git && cd ros-envs/docker/noetic
+cp .env.example .env    # y define CODE_PASSWORD en .env
 docker compose up -d
 ```
+
+| Comando | Qué hace |
+|---|---|
+| `cp .env.example .env` | Crea el fichero con tus ajustes. Git lo ignora, así que las contraseñas no se suben |
+| `docker compose up -d` | Descarga la imagen y arranca el contenedor en segundo plano (`-d`) |
+| `docker compose logs -f` | Sigue su salida, para ver por qué no arranca |
+| `docker compose down` | Para y elimina el contenedor. El volumen con la home se queda; `down -v` también lo borra |
 
 `CODE_PASSWORD` es obligatoria: sin ella el contenedor no arranca, en vez de dejar code-server abierto a cualquiera. Los dos puertos se publican solo en `127.0.0.1` del servidor.
 
@@ -38,6 +46,8 @@ Lo más sencillo es un túnel SSH:
 ```bash
 ssh -N -L 8443:localhost:8443 -L 6080:localhost:6080 <usuario>@<servidor>
 ```
+
+`-L local:host:remoto` reenvía un puerto de tu equipo a uno del servidor, y `-N` no abre una shell remota. Sigue en marcha mientras se usa el túnel.
 
 - VS Code: `http://localhost:8443`
 - Escritorio: `http://localhost:6080/vnc.html?autoconnect=1&resize=remote`

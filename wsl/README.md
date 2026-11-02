@@ -6,30 +6,76 @@ Each environment is its own WSL distro, `ROS-Noetic` or `ROS-Jazzy`. They share 
 
 ## Install
 
-Requires WSL 2 (`wsl --version`). In PowerShell, from an ordinary terminal:
+Requires WSL 2: `wsl --version` must answer, and `wsl --install --no-distribution` installs it if it does not. Run these two commands in PowerShell, from an ordinary terminal:
 
 ```powershell
 curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/wsl/install.ps1
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro noetic -User <linux user> -TimeZone <Area/City>
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <linux user> -TimeZone <Area/City>
 ```
 
-| Option | Default | Meaning |
-|---|---|---|
-| `-Distro` | required | `noetic` or `jazzy` |
-| `-User` | required | Linux user to create |
-| `-TimeZone` | `Etc/UTC` | Time zone of the distro |
-| `-Location` | `%UserProfile%\WSL` | Folder for the virtual disk |
-| `-WslVersion` | `2` | WSL version of the distro |
-| `-Ref` | the pinned release | Tag, branch or commit of this repository to install |
-| `-NoPassword` | off | Skip the password prompt, for unattended runs |
+For example, for a user called `alex` in Tokyo:
 
-It downloads the official Ubuntu image, imports it as a distro, runs the root and user steps, and asks for the `sudo` password along the way. It stops if a distro with that name already exists; to start over, run `wsl --unregister ROS-Noetic`, which deletes the whole distro.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User alex -TimeZone Asia/Tokyo
+```
 
-Then enter the distro and check it:
+### What the commands mean
+
+| Part | Meaning |
+|---|---|
+| `curl.exe` | The real curl. In Windows PowerShell, plain `curl` is an alias of `Invoke-WebRequest`, with other options |
+| `-f` | Fail on an HTTP error, instead of saving the error page as if it were the script |
+| `-L` | Follow redirects |
+| `-O` | Save it in the current folder with its remote name, `install.ps1` |
+| `v1.0.0` in the URL | The release to download. It also decides the default of `-Ref` |
+| `powershell` | Starts a new Windows PowerShell process |
+| `-ExecutionPolicy Bypass` | Lets that one process run a downloaded, unsigned script. It does not change the policy of the system |
+| `-File .\install.ps1` | The script to run. Everything after it goes to the script |
+
+### Options
+
+| Option | Required | Default | Accepted values | Meaning |
+|---|---|---|---|---|
+| `-Distro` | yes | | `noetic`, `jazzy` | Environment to install. It creates the distro `ROS-Noetic` or `ROS-Jazzy` |
+| `-User` | yes | | Lowercase letters, digits, `_` and `-`, starting with a letter or `_` | Linux user to create, which becomes the default user of the distro |
+| `-TimeZone` | no | `Etc/UTC` | A *TZ identifier* from the [list of time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), such as `Europe/Madrid` | Time zone of the distro |
+| `-Location` | no | `%UserProfile%\WSL` | Any folder | Where the virtual disk goes, in a subfolder with the name of the distro |
+| `-WslVersion` | no | `2` | `1`, `2` | WSL version of the distro. Jazzy only works on `2`, because systemd on Ubuntu 24.04 needs file locks that WSL 1 lacks |
+| `-Ref` | no | the release of the script | A tag, branch or commit of this repository | Version to install |
+| `-NoPassword` | no | off | No value, it is a switch | Skips the password prompt, for unattended runs. The user then has no `sudo` password: set one later with `wsl -d ROS-Jazzy -u root passwd <user>` |
+
+More examples:
+
+```powershell
+# On another disk
+.\install.ps1 -Distro jazzy -User alex -Location D:\WSL
+# ROS Noetic instead of Jazzy
+.\install.ps1 -Distro noetic -User alex
+# The latest code, not a release
+.\install.ps1 -Distro jazzy -User alex -Ref main
+```
+
+If PowerShell refuses to run the script directly, use the `powershell -ExecutionPolicy Bypass -File` form from above.
+
+### What the script does
+
+1. Stops if a distro with that name already exists. To start over, `wsl --unregister ROS-Jazzy` deletes the whole distro, along with everything inside it.
+2. Downloads the official Ubuntu image to a temporary folder, which it deletes at the end.
+3. Imports the image as a distro.
+4. Runs the root step inside it (`ros/<distro>/setup-root.sh`): the user, its time zone, the repositories and the packages.
+5. Restarts the distro and asks for the `sudo` password.
+6. Runs the user step (`ros/<distro>/setup-user.sh`): `.bashrc`, machine detection, the workspace and `rosdep`.
+
+### Check it
+
+```powershell
+wsl -d ROS-Jazzy
+```
 
 ```bash
-gh auth login && gh auth setup-git    # to work with GitHub repositories
-git clone https://github.com/Huxsby/ros-envs.git && bash ros-envs/ros/noetic/smoke-test.sh
+gh auth login && gh auth setup-git    # log in to GitHub and use that login for git
+git clone https://github.com/Huxsby/ros-envs.git
+bash ros-envs/ros/jazzy/smoke-test.sh # must end in SMOKE TEST OK
 ```
 
 ## Daily use
