@@ -1,0 +1,2 @@
+# VNC_PASSWORD is empty on purpose in .env.example: the rule reads the next line as its value
+bcb56673276515b62057e851e349f7e57131ae95:docker/noetic/.env.example:generic-api-key:3
