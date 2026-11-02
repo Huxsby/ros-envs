@@ -13,7 +13,7 @@ GPU=auto
 case "${1:-}" in
   ""|--report) ;;
   --save) MODE=save; GPU=${2:-auto} ;;
-  --jobs) MODE=jobs ;;
+  --jobs) MODE="jobs" ;;
   *) echo "usage: machine.sh [--report | --save [auto|software|NVIDIA|AMD|Intel|...] | --jobs]" >&2; exit 2 ;;
 esac
 

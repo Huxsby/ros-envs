@@ -14,6 +14,9 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
+# systemd on Ubuntu 24.04 uses file locks that WSL 1 lacks: it fails with "Failed to take /etc/passwd lock"
+if ($Distro -eq 'jazzy' -and $WslVersion -eq 1) { throw 'Jazzy needs WSL 2: use -WslVersion 2' }
+
 $Name = "ROS-$((Get-Culture).TextInfo.ToTitleCase($Distro))"
 $Installer = "https://raw.githubusercontent.com/Huxsby/ros-envs/$Ref/install.sh"
 $Images = @{

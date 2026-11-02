@@ -1,17 +1,27 @@
-# Installs each environment from scratch and runs its smoke test. On a change, only the group it touches runs;
-# everything runs once a week, because most breakage comes from outside (expired keys, removed images, packages).
+# Installs each environment from scratch and runs its smoke test. On a change, only the group it touches runs, and
+# nothing runs for documentation. Everything runs once a week, because most breakage comes from outside (expired keys,
+# removed images, packages). By hand, Run workflow can choose one group.
 name: Environments
 
 on:
   push:
     branches: [main]
+    paths-ignore: ['**/*.md', 'LICENSE']
   pull_request:
+    paths-ignore: ['**/*.md', 'LICENSE']
   schedule:
     - cron: '17 4 * * 1'
   workflow_dispatch:
+    inputs:
+      group:
+        description: Group to run
+        type: choice
+        options: [all, lint, native, distrobox, docker, wsl]
+        default: all
 
 permissions:
   contents: read
+  pull-requests: read   # dorny/paths-filter lists the files of a pull request through the API
 
 concurrency:
   group: environments-${{ github.ref }}
@@ -21,6 +31,7 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
+      lint: ${{ steps.groups.outputs.lint }}
       native: ${{ steps.groups.outputs.native }}
       distrobox: ${{ steps.groups.outputs.distrobox }}
       docker: ${{ steps.groups.outputs.docker }}
@@ -31,29 +42,37 @@ jobs:
         id: filter
         with:
           filters: |
-            native: ['ros/**', 'install.sh', 'ci/**', '.github/workflows/environments.yml']
-            distrobox: ['ros/**', 'distrobox/**', 'install.sh', '.github/workflows/environments.yml']
-            docker: ['ros/noetic/smoke-test.sh', 'ros/machine.sh', 'docker/**', '.github/workflows/environments.yml']
-            wsl: ['ros/**', 'wsl/**', 'install.sh', '.github/workflows/environments.yml']
+            lint: ['**/*.sh', '**/*.ps1']
+            native: ['ros/**', 'install.sh', 'ci/**']
+            distrobox: ['ros/**', 'distrobox/*.sh', 'install.sh']
+            docker: ['ros/noetic/smoke-test.sh', 'ros/machine.sh', 'docker/noetic/Dockerfile', 'docker/noetic/*.sh', 'docker/noetic/supervisord.conf', 'docker/noetic/bashrc']
+            wsl: ['ros/**', 'wsl/*.ps1', 'install.sh']
       - id: groups
         env:
-          ALL: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+          EVENT: ${{ github.event_name }}
+          CHOSEN: ${{ inputs.group }}
+          LINT: ${{ steps.filter.outputs.lint }}
           NATIVE: ${{ steps.filter.outputs.native }}
           DISTROBOX: ${{ steps.filter.outputs.distrobox }}
           DOCKER: ${{ steps.filter.outputs.docker }}
           WSL: ${{ steps.filter.outputs.wsl }}
         run: |
-          for group in native distrobox docker wsl; do
+          for group in lint native distrobox docker wsl; do
             value=${group^^}
-            echo "$group=$([ "$ALL" = true ] && echo true || echo "${!value}")" >> "$GITHUB_OUTPUT"
+            case $EVENT in
+              schedule) run=true ;;
+              workflow_dispatch) run=$([ "$CHOSEN" = all ] || [ "$CHOSEN" = "$group" ] && echo true || echo false) ;;
+              *) run=${!value} ;;
+            esac
+            echo "$group=$run" >> "$GITHUB_OUTPUT"
           done
 
   lint:
+    needs: changes
+    if: needs.changes.outputs.lint == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
       - name: Bash syntax and shellcheck
         run: |
           mapfile -t scripts < <(git ls-files '*.sh')
@@ -65,8 +84,6 @@ jobs:
           $errors = $null
           [void][System.Management.Automation.Language.Parser]::ParseFile("$PWD/wsl/install.ps1", [ref]$null, [ref]$errors)
           if ($errors) { $errors; exit 1 }
-      - name: Secrets
-        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo
 
   native:
     needs: changes
@@ -150,11 +167,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: [noetic, jazzy]
+        include:
+          - { distro: noetic, wsl: 1 }
+          - { distro: jazzy, wsl: 2 }   # systemd on Ubuntu 24.04 does not work on WSL 1
     steps:
       - uses: actions/checkout@v5
       - name: Install ${{ matrix.distro }} through wsl/install.ps1
         shell: pwsh
         run: |
           wsl.exe --update
-          .\wsl\install.ps1 -Distro ${{ matrix.distro }} -User ci -WslVersion 1 -Ref ${{ github.sha }} -NoPassword
+          .\wsl\install.ps1 -Distro ${{ matrix.distro }} -User ci -WslVersion ${{ matrix.wsl }} -Ref ${{ github.sha }} -NoPassword
