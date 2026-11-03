@@ -23,7 +23,7 @@ if ! grep -q '^export GZ_IP=' ~/.bashrc; then
 export GZ_IP=127.0.0.1
 BASHRC
 fi
-# render (GPU through d3d12 or software) and compile jobs of this machine
+echo "== Machine detection: render and compile jobs"
 bash "$ROS_DIR/machine.sh" --save
 
 # colcon: --symlink-install to edit a .py without rebuilding (like devel/ in catkin) and one package at a time,
@@ -35,12 +35,14 @@ build:
   executor: sequential
 YAML
 
+echo "== Workspace ~/ros2_ws (packages go in ~/ros2_ws/src; 0 packages is expected now)"
 mkdir -p ~/ros2_ws/src
 set +u
 source /opt/ros/jazzy/setup.bash
 set -u
 cd ~/ros2_ws && MAKEFLAGS=-j"$(bash "$ROS_DIR/machine.sh" --jobs)" colcon build
 
-rosdep update
+echo "== rosdep update"
+rosdep update -q
 
-echo "== setup-user OK"
+echo "== setup-user OK: open a new terminal (or source ~/.bashrc) to load ROS"

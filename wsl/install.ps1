@@ -1,13 +1,13 @@
 # Creates a WSL distro with a ROS environment: ROS-Noetic (Ubuntu 20.04) or ROS-Jazzy (Ubuntu 24.04).
 # Usage, in PowerShell:
-#   .\install.ps1 -Distro noetic -User <linux user> [-TimeZone Area/City] [-Location C:\WSL] [-Ref v1.0.0]
+#   .\install.ps1 -Distro noetic -User <linux user> [-TimeZone Area/City] [-Location C:\WSL] [-Ref v1.0.1]
 # It downloads what it needs to a temporary folder and deletes it at the end.
 param(
     [Parameter(Mandatory)][ValidateSet('noetic', 'jazzy')][string]$Distro,
     [Parameter(Mandatory)][ValidatePattern('^[a-z_][a-z0-9_-]*$')][string]$User,
     [ValidatePattern('^[A-Za-z0-9_+/-]+$')][string]$TimeZone = 'Etc/UTC',
     [string]$Location = (Join-Path $env:USERPROFILE 'WSL'),
-    [string]$Ref = 'v1.0.0',
+    [string]$Ref = 'v1.0.1',
     # Without a password prompt, for unattended runs such as CI
     [switch]$NoPassword
 )
@@ -46,12 +46,13 @@ try {
     Write-Host "== Importing $Name into $Location"
     $Target = Join-Path $Location $Name
     New-Item -ItemType Directory -Force -Path $Target | Out-Null
-    Invoke-Wsl --import $Name $Target $Image --version 2
+    # wsl prints its own success message in the language of Windows: left out, the script reports each step
+    Invoke-Wsl --import $Name $Target $Image --version 2 | Out-Null
 
     Write-Host '== Root step: user, repositories and packages'
     # Set in the environment so that it applies to whatever ref the installer was pinned to
     Invoke-Wsl -d $Name -u root -- bash -c "curl -fsSL $Installer | ROS_ENVS_REF=$Ref bash -s -- root $Distro $User $TimeZone"
-    Invoke-Wsl --terminate $Name
+    Invoke-Wsl --terminate $Name | Out-Null
     if (-not $NoPassword) {
         Write-Host "== Password for sudo ($User)"
         Invoke-Wsl -d $Name -u root passwd $User
@@ -59,7 +60,9 @@ try {
 
     Write-Host '== User step: .bashrc, machine detection and workspace'
     Invoke-Wsl -d $Name -- bash -c "curl -fsSL $Installer | ROS_ENVS_REF=$Ref bash -s -- user $Distro"
-    Write-Host "== $Name is ready. To enter: wsl -d $Name"
+    Write-Host "== $Name is ready"
+    Write-Host "   Enter it:            wsl -d $Name"
+    Write-Host "   Then check it with:  git clone https://github.com/Huxsby/ros-envs.git && bash ros-envs/ros/$Distro/smoke-test.sh"
 }
 finally {
     Remove-Item -Recurse -Force $Temporary -ErrorAction SilentlyContinue

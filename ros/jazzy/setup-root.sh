@@ -59,6 +59,7 @@ apt-get install -y \
   ros-jazzy-teleop-twist-keyboard ros-jazzy-tf-transformations \
   python3-numpy python3-pandas python3-matplotlib python3-opencv ffmpeg gh tmux zip \
   shellcheck python3-pyflakes
-[ -f /etc/ros/rosdep/sources.list.d/20-default.list ] || rosdep init
+# its advice to run rosdep update is left out: setup-user.sh does it
+[ -f /etc/ros/rosdep/sources.list.d/20-default.list ] || rosdep init >/dev/null
 
 echo "== setup-root OK"

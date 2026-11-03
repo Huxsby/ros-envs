@@ -18,7 +18,7 @@ Cada opción tiene su propia guía, con todas las partes de los comandos explica
 En Windows, con PowerShell ([guía](wsl/README.es.md)):
 
 ```powershell
-curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/wsl/install.ps1
+curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/wsl/install.ps1
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usuario de linux> -TimeZone <Area/City>
 ```
 
@@ -27,13 +27,13 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usua
 En Linux, con Distrobox ([guía](distrobox/README.es.md)):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
 ```
 
 En un Ubuntu 20.04 o 24.04 ya en marcha, como una máquina virtual:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/install.sh | bash -s -- ubuntu jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- ubuntu jazzy
 ```
 
 En un servidor, desde el navegador: ver la [guía de Docker](docker/noetic/README.es.md), que solo cubre Noetic.

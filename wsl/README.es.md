@@ -9,7 +9,7 @@ Cada entorno es su propia distro de WSL, `ROS-Noetic` o `ROS-Jazzy`. No comparte
 Necesita WSL 2: `wsl --version` debe responder y, si no lo hace, `wsl --install --no-distribution` lo instala. Ejecuta estos dos comandos en PowerShell, desde una terminal normal:
 
 ```powershell
-curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.0/wsl/install.ps1
+curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/wsl/install.ps1
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usuario de linux> -TimeZone <Area/City>
 ```
 
@@ -27,7 +27,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User alex 
 | `-f` | Falla si hay un error HTTP, en vez de guardar la página de error como si fuera el script |
 | `-L` | Sigue las redirecciones |
 | `-O` | Lo guarda en la carpeta actual con su nombre remoto, `install.ps1` |
-| `v1.0.0` en la URL | La versión que se descarga. También decide el valor por defecto de `-Ref` |
+| `v1.0.1` en la URL | La versión que se descarga. También decide el valor por defecto de `-Ref` |
 | `powershell` | Arranca un proceso nuevo de Windows PowerShell |
 | `-ExecutionPolicy Bypass` | Permite a ese proceso ejecutar un script descargado y sin firmar. No cambia la política del sistema |
 | `-File .\install.ps1` | El script que se ejecuta. Todo lo que va detrás es para el script |

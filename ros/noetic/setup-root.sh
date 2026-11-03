@@ -45,6 +45,7 @@ apt-get install -y \
   python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool python3-catkin-tools \
   python3-numpy python3-pandas python3-matplotlib ffmpeg gh tmux zip \
   shellcheck python3-pyflakes
-[ -f /etc/ros/rosdep/sources.list.d/20-default.list ] || rosdep init
+# its advice to run rosdep update is left out: setup-user.sh does it
+[ -f /etc/ros/rosdep/sources.list.d/20-default.list ] || rosdep init >/dev/null
 
 echo "== setup-root OK"

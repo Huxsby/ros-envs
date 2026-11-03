@@ -14,15 +14,20 @@ export ROS_MASTER_URI=http://localhost:11311
 export ROS_HOSTNAME=localhost
 BASHRC
 fi
-# render (GPU through d3d12 or software) and compile jobs of this machine
+echo "== Machine detection: render and compile jobs"
 bash "$ROS_DIR/machine.sh" --save
 
 mkdir -p ~/catkin_ws/src
 set +u
 source /opt/ros/noetic/setup.bash
 set -u
-cd ~/catkin_ws && catkin_make -j"$(bash "$ROS_DIR/machine.sh" --jobs)"
+echo "== Workspace ~/catkin_ws (packages go in ~/catkin_ws/src)"
+# its output only matters if it fails
+LOG=$(mktemp)
+cd ~/catkin_ws && catkin_make -j"$(bash "$ROS_DIR/machine.sh" --jobs)" >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
+rm -f "$LOG"
 
-rosdep update --include-eol-distros
+echo "== rosdep update"
+rosdep update -q --include-eol-distros
 
-echo "== setup-user OK"
+echo "== setup-user OK: open a new terminal (or source ~/.bashrc) to load ROS"

@@ -25,6 +25,9 @@ echo "== SMACH"
 python3 - <<'PY' && ok "two-state machine (ONE -> TWO -> done)" || fail "SMACH"
 import smach
 
+# only warnings and errors: its debug lines would hide the result
+smach.set_loggers(lambda msg: None, print, lambda msg: None, print)
+
 class Step(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=['next'])
