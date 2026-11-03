@@ -1,0 +1,21 @@
+name: Feature request
+description: A change that would help any ROS project, such as a new environment, host or check
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: English or Spanish are both fine. For a question, use Discussions instead.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What you cannot do now, and in which host and environment
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What you would change, and how it could be tested in CI
+    validations:
+      required: true

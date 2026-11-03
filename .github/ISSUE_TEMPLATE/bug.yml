@@ -1,0 +1,54 @@
+name: Bug report
+description: An install, a smoke test or a script does not work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: English or Spanish are both fine.
+  - type: dropdown
+    id: host
+    attributes:
+      label: Host
+      options: [WSL 2, Distrobox, Docker, Existing Ubuntu]
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options: [Noetic, Jazzy]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release or commit you installed, such as v1.0.1
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: What you ran
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The end of the output, from the last line that starts with ==
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: machine
+    attributes:
+      label: Machine
+      description: The output of bash ros/machine.sh, if the environment got that far
+      render: text
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected

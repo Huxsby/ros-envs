@@ -2,7 +2,21 @@
 
 **English** · [Español](README.es.md)
 
-Reproducible ROS development environments, on three kinds of host:
+**A working ROS Noetic or ROS 2 Jazzy with Gazebo on WSL 2, Distrobox or Docker, installed by one script and checked by a smoke test.**
+
+[![Environments](https://github.com/Huxsby/ros-envs/actions/workflows/environments.yml/badge.svg)](https://github.com/Huxsby/ros-envs/actions/workflows/environments.yml) [![Release](https://img.shields.io/github/v/release/Huxsby/ros-envs)](https://github.com/Huxsby/ros-envs/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+![The Jazzy smoke test after an install: the libraries load, a SMACH machine runs, the simulated laser sees a wall at 2.9 m and cmd_vel moves the robot](docs/demo.gif)
+
+*The real output of the Jazzy smoke test on a fresh `ROS-Jazzy` distro, replayed; the report of the machine is left out.*
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+```
+
+That is Linux with Distrobox. Windows, an existing Ubuntu and Docker are under [Install](#install).
+
+Three kinds of host:
 
 | Environment | Ubuntu | ROS | Simulator | Python | WSL | Distrobox | Docker |
 |---|---|---|---|---|---|---|---|
@@ -110,6 +124,10 @@ Avoid depending on the submodule for basic project commands: `git clone` does no
 1. Update the version in `install.sh`, `wsl/install.ps1` and the install commands of both READMEs.
 2. Merge to `main` and wait for the checks.
 3. `git tag vX.Y.Z && git push origin vX.Y.Z`.
+
+## Contributing
+
+Issues and pull requests are welcome, in English or Spanish: see [CONTRIBUTING.md](CONTRIBUTING.md). Questions go to [Discussions](https://github.com/Huxsby/ros-envs/discussions). Changes per version are in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

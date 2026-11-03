@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/Huxsby/ros-envs/discussions
+    about: Ask how to use the environments or share an idea

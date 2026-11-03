@@ -2,7 +2,21 @@
 
 [English](README.md) · **Español**
 
-Entornos de desarrollo de ROS reproducibles, en tres tipos de anfitrión:
+**ROS Noetic o ROS 2 Jazzy con Gazebo funcionando en WSL 2, Distrobox o Docker, instalado por un solo script y comprobado con una prueba de humo.**
+
+[![Environments](https://github.com/Huxsby/ros-envs/actions/workflows/environments.yml/badge.svg)](https://github.com/Huxsby/ros-envs/actions/workflows/environments.yml) [![Release](https://img.shields.io/github/v/release/Huxsby/ros-envs)](https://github.com/Huxsby/ros-envs/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+![La prueba de humo de Jazzy tras una instalación: se cargan las librerías, corre una máquina SMACH, el láser simulado ve una pared a 2,9 m y cmd_vel mueve el robot](docs/demo.gif)
+
+*La salida real de la prueba de humo de Jazzy en una distro `ROS-Jazzy` recién instalada, reproducida; se omite el informe del equipo.*
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+```
+
+Eso es Linux con Distrobox. Windows, un Ubuntu existente y Docker están en [Instalación](#instalación).
+
+Tres tipos de anfitrión:
 
 | Entorno | Ubuntu | ROS | Simulador | Python | WSL | Distrobox | Docker |
 |---|---|---|---|---|---|---|---|
@@ -110,6 +124,10 @@ Conviene que los comandos básicos del proyecto no dependan del submódulo: `git
 1. Actualiza la versión en `install.sh`, `wsl/install.ps1` y los comandos de instalación de los dos README.
 2. Fusiona en `main` y espera a las comprobaciones.
 3. `git tag vX.Y.Z && git push origin vX.Y.Z`.
+
+## Contribuir
+
+Las issues y los pull requests son bienvenidos, en inglés o en castellano: ver [CONTRIBUTING.es.md](CONTRIBUTING.es.md). Las preguntas van a [Discussions](https://github.com/Huxsby/ros-envs/discussions). Los cambios de cada versión están en [CHANGELOG.md](CHANGELOG.md).
 
 ## Licencia
 
