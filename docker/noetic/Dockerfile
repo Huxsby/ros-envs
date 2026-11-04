@@ -1,5 +1,5 @@
 # ROS Noetic + Gazebo 11 (Ubuntu 20.04) on a server, with a desktop in the browser (noVNC) and VS Code in the
-# browser (code-server). Same package set as ros/noetic/setup-root.sh.
+# browser (code-server). Same package set as ros/ros1/setup-root.sh.
 # Build from docker/ (the context shares common/ with the other distros): docker build -f noetic/Dockerfile -t NAME .
 FROM osrf/ros:noetic-desktop-full
 

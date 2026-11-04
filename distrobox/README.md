@@ -6,6 +6,8 @@ On Linux, each environment is a Distrobox box: a Podman container with its own U
 
 | Box | Image | Box home |
 |---|---|---|
+| `ros-kinetic` | `ubuntu:16.04` | `~/distrobox/ros-kinetic` |
+| `ros-melodic` | `ubuntu:18.04` | `~/distrobox/ros-melodic` |
 | `ros-noetic` | `ubuntu:20.04` | `~/distrobox/ros-noetic` |
 | `ros-jazzy` | `ubuntu:24.04` | `~/distrobox/ros-jazzy` |
 
@@ -30,7 +32,7 @@ curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh |
 | `v1.0.1` in the URL | The release to download. It also decides the version that gets installed |
 | `\| bash -s` | Runs what `curl` writes, reading the script from standard input |
 | `--` | Ends the options of `bash`: what follows goes to the script |
-| `distrobox jazzy` | Command and environment: `noetic` or `jazzy` |
+| `distrobox jazzy` | Command and environment: `kinetic`, `melodic`, `noetic` or `jazzy` |
 
 To read the script first, or to use options, work from a clone:
 
@@ -43,7 +45,7 @@ bash install.sh distrobox jazzy --link ~/my-project
 
 | Option | Required | Meaning |
 |---|---|---|
-| `noetic`, `jazzy` | yes | Environment to install. It creates the box `ros-noetic` or `ros-jazzy` |
+| `kinetic`, `melodic`, `noetic`, `jazzy` | yes | Environment to install. It creates the box `ros-<environment>`, such as `ros-jazzy` |
 | `--link DIR` | no | Links that host folder in `~/projects/<name>` inside the box and runs `make build` if it has a Makefile |
 | `DBX_FLAGS` | no | Environment variable with extra options for podman: `DBX_FLAGS="--memory 4g" bash install.sh distrobox jazzy` |
 | `DISTROBOX_HOMES` | no | Environment variable with the folder for the homes of the boxes. By default, `~/distrobox` |

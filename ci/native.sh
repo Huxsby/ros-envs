@@ -1,8 +1,8 @@
 #!/bin/bash
 # Installs an environment in a plain Ubuntu container through install.sh, as a normal user, and runs its smoke test.
-# Usage (as root, with the repository in /src): bash /src/ci/native.sh noetic|jazzy
+# Usage (as root, with the repository in /src): bash /src/ci/native.sh kinetic|melodic|noetic|jazzy
 set -euo pipefail
-DISTRO=${1:?usage: native.sh noetic|jazzy}
+DISTRO=${1:?usage: native.sh kinetic|melodic|noetic|jazzy}
 apt-get update -qq
 apt-get install -y -qq sudo
 useradd -m -s /bin/bash -G sudo ci

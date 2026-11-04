@@ -6,6 +6,8 @@ En Linux, cada entorno es una caja de Distrobox: un contenedor de Podman con su 
 
 | Caja | Imagen | Home de la caja |
 |---|---|---|
+| `ros-kinetic` | `ubuntu:16.04` | `~/distrobox/ros-kinetic` |
+| `ros-melodic` | `ubuntu:18.04` | `~/distrobox/ros-melodic` |
 | `ros-noetic` | `ubuntu:20.04` | `~/distrobox/ros-noetic` |
 | `ros-jazzy` | `ubuntu:24.04` | `~/distrobox/ros-jazzy` |
 
@@ -30,7 +32,7 @@ curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh |
 | `v1.0.1` en la URL | La versión que se descarga. También decide la versión que se instala |
 | `\| bash -s` | Ejecuta lo que escribe `curl`, leyendo el script de la entrada estándar |
 | `--` | Termina las opciones de `bash`: lo que sigue es para el script |
-| `distrobox jazzy` | Orden y entorno: `noetic` o `jazzy` |
+| `distrobox jazzy` | Orden y entorno: `kinetic`, `melodic`, `noetic` o `jazzy` |
 
 Para leer antes el script, o para usar opciones, trabaja desde un clon:
 
@@ -43,7 +45,7 @@ bash install.sh distrobox jazzy --link ~/mi-proyecto
 
 | Opción | Obligatoria | Significado |
 |---|---|---|
-| `noetic`, `jazzy` | sí | Entorno que se instala. Crea la caja `ros-noetic` o `ros-jazzy` |
+| `kinetic`, `melodic`, `noetic`, `jazzy` | sí | Entorno que se instala. Crea la caja `ros-<entorno>`, como `ros-jazzy` |
 | `--link DIR` | no | Enlaza esa carpeta del anfitrión en `~/projects/<nombre>` dentro de la caja y ejecuta `make build` si tiene Makefile |
 | `DBX_FLAGS` | no | Variable de entorno con opciones extra para podman: `DBX_FLAGS="--memory 4g" bash install.sh distrobox jazzy` |
 | `DISTROBOX_HOMES` | no | Variable de entorno con la carpeta de las homes de las cajas. Por defecto, `~/distrobox` |

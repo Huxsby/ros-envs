@@ -6,10 +6,14 @@ Notable changes per version. Versions follow [Semantic Versioning](https://semve
 
 ### Added
 
+- ROS Kinetic (Ubuntu 16.04, Gazebo 7) and ROS Melodic (Ubuntu 18.04, Gazebo 9) environments, with Python 2.7 like their official packages, on WSL 2 (`ROS-Kinetic`, `ROS-Melodic`), Distrobox (`ros-kinetic`, `ros-melodic`) and an existing Ubuntu, each with its smoke test and its CI jobs.
 - A Jazzy Docker image (`docker/jazzy`, published as `ghcr.io/huxsby/ros-envs-jazzy`) with Gazebo Harmonic, a browser desktop and VS Code, like the Noetic one.
 
 ### Changed
 
+- The three ROS 1 environments share their scripts, in `ros/ros1`; `ros/<distro>/*.sh` keep their paths and only call them.
+- `wsl/install.ps1` updates the certificates and `curl` of the imported image before downloading the installer.
+- On WSL, `ros/machine.sh` says when the Mesa of the distro has no `d3d12` driver, instead of trying every GPU.
 - What the two Docker images share (`entrypoint.sh`, `supervisord.conf`) moved to `docker/common`, and the images are built with `docker/` as the context.
 - CI builds and smoke-tests both Docker images, and publishes both.
 
