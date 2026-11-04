@@ -176,6 +176,8 @@ jobs:
       fail-fast: false
       matrix:
         distro: [kinetic, melodic, noetic, jazzy]
+    env:
+      WSL_UTF8: '1'   # wsl.exe writes UTF-16 by default, which shows in the log with a null between letters
     steps:
       - uses: actions/checkout@v5
       - name: Install ${{ matrix.distro }} through wsl/install.ps1
@@ -184,3 +186,14 @@ jobs:
           wsl.exe --update
           .\wsl\install.ps1 -Distro ${{ matrix.distro }} -User ci -Ref ${{ github.sha }} -NoPassword
           wsl.exe --list --verbose
+      # From the checkout on the Windows side (/mnt/...). Without DISPLAY, as on the other runners: there is no
+      # display, and the Jazzy test then renders without one. Repeated once, like the others, because gzserver
+      # sometimes crashes on start.
+      - name: Smoke test
+        shell: pwsh
+        run: |
+          $name = "ROS-$((Get-Culture).TextInfo.ToTitleCase('${{ matrix.distro }}'))"
+          $test = 'ros/${{ matrix.distro }}/smoke-test.sh'
+          wsl.exe -d $name --cd $PWD -- env -u DISPLAY -u WAYLAND_DISPLAY bash $test
+          if ($LASTEXITCODE -ne 0) { wsl.exe -d $name --cd $PWD -- env -u DISPLAY -u WAYLAND_DISPLAY bash $test }
+          exit $LASTEXITCODE
