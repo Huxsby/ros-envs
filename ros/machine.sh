@@ -3,6 +3,7 @@
 # on Linux with Distrobox. Shared by Noetic and Jazzy: setup-user.sh runs it on install, and it should be repeated
 # after changing machine, GPU driver or .wslconfig. ~/.bashrc loads what it saves.
 # Usage: machine.sh                 report, changes nothing
+#        machine.sh --help          prints this usage
 #        machine.sh --save [GPU]    saves the variables to ~/.config/ros-envs/machine.sh and loads them from ~/.bashrc
 #        machine.sh --jobs          prints only the number of compile jobs
 #        GPU: auto (default: the first that works of NVIDIA, AMD, Intel) | software | adapter name
@@ -14,7 +15,8 @@ case "${1:-}" in
   ""|--report) ;;
   --save) MODE=save; GPU=${2:-auto} ;;
   --jobs) MODE="jobs" ;;
-  *) echo "usage: machine.sh [--report | --save [auto|software|NVIDIA|AMD|Intel|...] | --jobs]" >&2; exit 2 ;;
+  -h|--help) sed -n '5,9s/^# \{0,1\}//p' "$0"; exit 0 ;;
+  *) echo "usage: machine.sh [--report | --save [auto|software|NVIDIA|AMD|Intel|...] | --jobs | --help]" >&2; exit 2 ;;
 esac
 
 ON_WSL=false

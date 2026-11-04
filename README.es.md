@@ -132,7 +132,7 @@ Conviene que los comandos básicos del proyecto no dependan del submódulo: `git
 | Nativo | `install.sh` y las pruebas de humo en contenedores Ubuntu limpios | |
 | Distrobox | `install.sh distrobox`, sobre podman | El acceso a la GPU |
 | Docker | Construcción de la imagen, comprobación de la contraseña, respuesta de code-server y noVNC, prueba de humo | |
-| WSL | `install.ps1` en un runner de Windows | Las pruebas de humo, WSLg y el acceso a la GPU. Se permite que falle, porque los runners alojados no admiten WSL 2 de forma oficial |
+| WSL | `install.ps1` y las pruebas de humo en un runner de Windows | WSLg y el acceso a la GPU. Se permite que falle, porque los runners alojados no admiten WSL 2 de forma oficial |
 
 ## Publicar una versión
 

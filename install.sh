@@ -5,15 +5,22 @@
 #        install.sh distrobox <distro> [--link DIR] on a Linux host: a box of that distro (distrobox/create.sh)
 #        install.sh root <distro> <user> [time zone]   only the root step (wsl/install.ps1 uses it)
 #        install.sh user <distro>                      only the user step (wsl/install.ps1 uses it)
+#        install.sh --help                             prints this usage
 #        distro: kinetic (Ubuntu 16.04), melodic (18.04), noetic (20.04) or jazzy (24.04)
 # ROS_ENVS_REF chooses another tag or branch to download.
 set -euo pipefail
 REPOSITORY=Huxsby/ros-envs
 REF=${ROS_ENVS_REF:-v1.0.1}   # updated with each release: see the release steps in README.md
 
+# usage: prints the usage lines at the top of this file or, piped from curl, which has no file to read, a short one
+usage() {
+  if [ -f "${BASH_SOURCE[0]:-}" ]; then sed -n '4,10s/^# \{0,1\}//p' "${BASH_SOURCE[0]}"
+  else echo "usage: install.sh <ubuntu|distrobox|root|user> <kinetic|melodic|noetic|jazzy> ... | install.sh --help"; fi
+}
 COMMAND=${1:-}
 DISTRO=${2:-}
-case $DISTRO in kinetic|melodic|noetic|jazzy) ;; *) sed -n '4,9s/^# *//p' "${BASH_SOURCE[0]:-/dev/null}" 2>/dev/null; echo "usage: install.sh <ubuntu|distrobox|root|user> <kinetic|melodic|noetic|jazzy> ..." >&2; exit 2 ;; esac
+case $COMMAND in -h|--help) usage; exit 0 ;; esac
+case $DISTRO in kinetic|melodic|noetic|jazzy) ;; *) usage >&2; exit 2 ;; esac
 shift 2
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]:-.}")" 2>/dev/null && pwd)

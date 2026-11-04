@@ -132,7 +132,7 @@ Avoid depending on the submodule for basic project commands: `git clone` does no
 | Native | `install.sh` and the smoke tests on plain Ubuntu containers | |
 | Distrobox | `install.sh distrobox`, on podman | GPU access |
 | Docker | Image build, password check, code-server and noVNC answering, smoke test | |
-| WSL | `install.ps1` on a Windows runner | The smoke tests, WSLg and GPU access. Allowed to fail, because hosted runners do not officially support WSL 2 |
+| WSL | `install.ps1` and the smoke tests on a Windows runner | WSLg and GPU access. Allowed to fail, because hosted runners do not officially support WSL 2 |
 
 ## Releasing
 
