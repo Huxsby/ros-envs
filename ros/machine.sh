@@ -73,6 +73,9 @@ if [ "$GPU" = software ]; then
   REASON="requested with GPU=software"
 elif $ON_WSL && [ ! -e /dev/dxg ]; then
   REASON="WSL does not expose the GPU (/dev/dxg is missing)"
+elif $ON_WSL && ! ls /usr/lib/*/dri/d3d12_dri.so >/dev/null 2>&1; then
+  # the d3d12 driver arrived in Mesa 21: Ubuntu 20.04 has it, 16.04 and 18.04 do not
+  REASON="this Mesa has no d3d12 driver to reach the Windows GPU (Ubuntu 20.04 and later have it)"
 elif ! command -v glxinfo >/dev/null; then
   REASON="glxinfo is missing, cannot try the GPU (sudo apt install mesa-utils)"
 elif [ -z "${DISPLAY:-}" ]; then

@@ -94,6 +94,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - { distro: kinetic, image: 'ubuntu:16.04' }
+          - { distro: melodic, image: 'ubuntu:18.04' }
           - { distro: noetic, image: 'ubuntu:20.04' }
           - { distro: jazzy, image: 'ubuntu:24.04' }
     steps:
@@ -109,7 +111,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: [noetic, jazzy]
+        distro: [kinetic, melodic, noetic, jazzy]
     steps:
       - uses: actions/checkout@v5
       - name: Install distrobox and podman
@@ -173,7 +175,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: [noetic, jazzy]
+        distro: [kinetic, melodic, noetic, jazzy]
     steps:
       - uses: actions/checkout@v5
       - name: Install ${{ matrix.distro }} through wsl/install.ps1

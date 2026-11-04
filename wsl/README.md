@@ -2,7 +2,7 @@
 
 **English** · [Español](README.es.md)
 
-Each environment is its own WSL distro, `ROS-Noetic` or `ROS-Jazzy`. They share neither packages nor `~/.bashrc`, and windows open on Windows through WSLg, with no X server.
+Each environment is its own WSL distro: `ROS-Kinetic`, `ROS-Melodic`, `ROS-Noetic` or `ROS-Jazzy`. They share neither packages nor `~/.bashrc`, and windows open on Windows through WSLg, with no X server.
 
 ## Install
 
@@ -36,7 +36,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User alex 
 
 | Option | Required | Default | Accepted values | Meaning |
 |---|---|---|---|---|
-| `-Distro` | yes | | `noetic`, `jazzy` | Environment to install. It creates the distro `ROS-Noetic` or `ROS-Jazzy` |
+| `-Distro` | yes | | `kinetic`, `melodic`, `noetic`, `jazzy` | Environment to install. It creates the distro `ROS-Kinetic`, `ROS-Melodic`, `ROS-Noetic` or `ROS-Jazzy` |
 | `-User` | yes | | Lowercase letters, digits, `_` and `-`, starting with a letter or `_` | Linux user to create, which becomes the default user of the distro |
 | `-TimeZone` | no | `Etc/UTC` | A *TZ identifier* from the [list of time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), such as `Europe/Madrid` | Time zone of the distro |
 | `-Location` | no | `%UserProfile%\WSL` | Any folder | Where the virtual disk goes, in a subfolder with the name of the distro |
@@ -50,6 +50,8 @@ More examples:
 .\install.ps1 -Distro jazzy -User alex -Location D:\WSL
 # ROS Noetic instead of Jazzy
 .\install.ps1 -Distro noetic -User alex
+# ROS Melodic, with Ubuntu 18.04 and Python 2.7
+.\install.ps1 -Distro melodic -User alex
 # The latest code, not a release
 .\install.ps1 -Distro jazzy -User alex -Ref main
 ```
@@ -60,7 +62,7 @@ If PowerShell refuses to run the script directly, use the `powershell -Execution
 
 1. Stops if a distro with that name already exists. To start over, `wsl --unregister ROS-Jazzy` deletes the whole distro, along with everything inside it.
 2. Downloads the official Ubuntu image to a temporary folder, which it deletes at the end.
-3. Imports the image as a distro.
+3. Imports the image as a distro and updates its certificates and `curl`.
 4. Runs the root step inside it (`ros/<distro>/setup-root.sh`): the user, its time zone, the repositories and the packages.
 5. Restarts the distro and asks for the `sudo` password.
 6. Runs the user step (`ros/<distro>/setup-user.sh`): `.bashrc`, machine detection, the workspace and `rosdep`.
@@ -93,6 +95,7 @@ Keep code on the ext4 disk of the distro, not in `/mnt/c`, where it is slow and 
 - **No display during install.** `machine.sh` needs one to try the GPU: if there is none, it leaves software rendering and says so. Repeat `--save` from a normal terminal.
 - **Under 6 GB of memory.** Gazebo and builds run short. Raise `memory=` in `%UserProfile%\.wslconfig`; WSL uses half of the machine's memory by default.
 - **`dbus` warnings during `apt` on Noetic.** They are normal: that distro does not use systemd.
-- **`rosdep update` ignores Noetic.** Since it reached end of life, it needs `--include-eol-distros`, which `setup-user.sh` already passes.
+- **`rosdep update` ignores Kinetic, Melodic or Noetic.** Since they reached end of life, it needs `--include-eol-distros`, which `setup-user.sh` already passes.
+- **Kinetic and Melodic render by software.** Their Mesa is older than the `d3d12` driver that reaches the Windows GPU, so `machine.sh` chooses `llvmpipe` and says why. Gazebo 7 and 9 work with it, only slower.
 - **Jazzy: nodes are not discovered.** It is usually the daemon on another `ROS_DOMAIN_ID`: `ros2 daemon stop` and try again.
 - **Jazzy: laser or black window problems.** Gazebo Harmonic renders with ogre2 and needs OpenGL 3.3 or later. `llvmpipe` always works, though it is slower. To diagnose: `gz sim -v 4 shapes.sdf`.
