@@ -21,7 +21,7 @@ Tres tipos de anfitrión:
 | Entorno | Ubuntu | ROS | Simulador | Python | WSL | Distrobox | Docker |
 |---|---|---|---|---|---|---|---|
 | Noetic | 20.04 | ROS 1 Noetic (sin soporte desde mayo de 2025) | Gazebo 11 (Classic) | 3.8 | `ROS-Noetic` | `ros-noetic` | `docker/noetic` |
-| Jazzy | 24.04 | ROS 2 Jazzy (LTS hasta mayo de 2029) | Gazebo Harmonic | 3.12 | `ROS-Jazzy` | `ros-jazzy` | no disponible |
+| Jazzy | 24.04 | ROS 2 Jazzy (LTS hasta mayo de 2029) | Gazebo Harmonic | 3.12 | `ROS-Jazzy` | `ros-jazzy` | `docker/jazzy` |
 
 Noetic y Jazzy no pueden compartir una versión de Ubuntu: ROS 1 no tiene paquetes para 22.04 o posteriores. Por eso cada entorno vive aparte, con sus paquetes, su `.bashrc` y su workspace (`~/catkin_ws` o `~/ros2_ws`).
 
@@ -50,7 +50,7 @@ En un Ubuntu 20.04 o 24.04 ya en marcha, como una máquina virtual:
 curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- ubuntu jazzy
 ```
 
-En un servidor, desde el navegador: ver la [guía de Docker](docker/noetic/README.es.md), que solo cubre Noetic.
+En un servidor, desde el navegador: ver la guía de Docker de [Noetic](docker/noetic/README.es.md) o de [Jazzy](docker/jazzy/README.es.md).
 
 ### `install.sh`
 

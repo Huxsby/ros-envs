@@ -1,0 +1,25 @@
+name: ros-jazzy
+services:
+  ros-jazzy:
+    image: ghcr.io/huxsby/ros-envs-jazzy:latest   # built by GitHub Actions (.github/workflows/image.yml)
+    pull_policy: always
+    container_name: ros-jazzy
+    hostname: ros-jazzy
+    restart: unless-stopped
+    environment:
+      - PASSWORD=${CODE_PASSWORD:-}   # required, checked by entrypoint.sh
+      - VNC_PASSWORD=${VNC_PASSWORD:-}
+      - VNC_GEOMETRY=${VNC_GEOMETRY:-1600x1000}
+      - CONTAINER_USER=ros   # name of the user created on start; must match the volume destination below
+      - TZ=${TZ:-Etc/UTC}
+    ports:
+      - "127.0.0.1:8443:8443"   # code-server
+      - "127.0.0.1:6080:6080"   # noVNC
+    volumes:
+      - home:/home/ros
+    shm_size: 1gb
+    mem_limit: 6g
+    cpus: 3.5
+
+volumes:
+  home:

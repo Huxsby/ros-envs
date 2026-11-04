@@ -1,0 +1,13 @@
+# ROS 2 Jazzy container environment (loaded from ~/.bashrc)
+export PATH="$HOME/.local/bin:$PATH"
+export DISPLAY=:1   # windows (Gazebo, rviz2, rqt) open on the noVNC desktop
+source /opt/ros/jazzy/setup.bash
+[ -f "$HOME/ros2_ws/install/setup.bash" ] && source "$HOME/ros2_ws/install/setup.bash"
+[ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ] && source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
+# nodes are only discovered inside the container, and Gazebo too (otherwise a firewall cuts its multicast discovery)
+export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+export GZ_IP=127.0.0.1
+# a server has no GPU in the container: say so, instead of letting Mesa probe for one
+export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+# a ROS g++ takes 1-2 GB and the container has a memory limit: two compile jobs unless told otherwise
+export MAKEFLAGS="${MAKEFLAGS:--j2}"

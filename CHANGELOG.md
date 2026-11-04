@@ -2,6 +2,17 @@
 
 Notable changes per version. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- A Jazzy Docker image (`docker/jazzy`, published as `ghcr.io/huxsby/ros-envs-jazzy`) with Gazebo Harmonic, a browser desktop and VS Code, like the Noetic one.
+
+### Changed
+
+- What the two Docker images share (`entrypoint.sh`, `supervisord.conf`) moved to `docker/common`, and the images are built with `docker/` as the context.
+- CI builds and smoke-tests both Docker images, and publishes both.
+
 ## [v1.0.1] - 2026-11-03
 
 ### Changed

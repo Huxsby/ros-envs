@@ -1,5 +1,6 @@
 # ROS Noetic + Gazebo 11 (Ubuntu 20.04) on a server, with a desktop in the browser (noVNC) and VS Code in the
 # browser (code-server). Same package set as ros/noetic/setup-root.sh.
+# Build from docker/ (the context shares common/ with the other distros): docker build -f noetic/Dockerfile -t NAME .
 FROM osrf/ros:noetic-desktop-full
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -27,9 +28,9 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone
 # The user (uid 1000) is created by entrypoint.sh on start, named after CONTAINER_USER
 RUN mkdir -p /var/log/supervisor
 
-COPY bashrc init-user.sh /opt/ros-envs/
-COPY supervisord.conf /etc/supervisor/conf.d/ros-envs.conf
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY noetic/bashrc noetic/init-user.sh /opt/ros-envs/
+COPY common/supervisord.conf /etc/supervisor/conf.d/ros-envs.conf
+COPY common/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh /opt/ros-envs/init-user.sh
 
 EXPOSE 8443 6080
