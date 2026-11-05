@@ -9,7 +9,7 @@ Each environment is its own WSL distro: `ROS-Kinetic`, `ROS-Melodic`, `ROS-Noeti
 Requires WSL 2: `wsl --version` must answer, and `wsl --install --no-distribution` installs it if it does not. Run these two commands in PowerShell, from an ordinary terminal:
 
 ```powershell
-curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/wsl/install.ps1
+curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/wsl/install.ps1
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <linux user> -TimeZone <Area/City>
 ```
 
@@ -27,7 +27,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User alex 
 | `-f` | Fail on an HTTP error, instead of saving the error page as if it were the script |
 | `-L` | Follow redirects |
 | `-O` | Save it in the current folder with its remote name, `install.ps1` |
-| `v1.0.1` in the URL | The release to download. It also decides the default of `-Ref` |
+| `v1.0.2` in the URL | The release to download. It also decides the default of `-Ref` |
 | `powershell` | Starts a new Windows PowerShell process |
 | `-ExecutionPolicy Bypass` | Lets that one process run a downloaded, unsigned script. It does not change the policy of the system |
 | `-File .\install.ps1` | The script to run. Everything after it goes to the script |

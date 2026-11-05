@@ -10,7 +10,7 @@
 # ROS_ENVS_REF chooses another tag or branch to download.
 set -euo pipefail
 REPOSITORY=Huxsby/ros-envs
-REF=${ROS_ENVS_REF:-v1.0.1}   # updated with each release: see the release steps in README.md
+REF=${ROS_ENVS_REF:-v1.0.2}   # updated with each release: see the release steps in README.md
 
 # usage: prints the usage lines at the top of this file or, piped from curl, which has no file to read, a short one
 usage() {

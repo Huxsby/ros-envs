@@ -11,7 +11,7 @@
 *La salida real de la prueba de humo de Jazzy en una distro `ROS-Jazzy` recién instalada, reproducida; se omite el informe del equipo.*
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
 ```
 
 Eso es Linux con Distrobox. Windows, un Ubuntu existente y Docker están en [Instalación](#instalación).
@@ -34,7 +34,7 @@ Cada opción tiene su propia guía, con todas las partes de los comandos explica
 En Windows, con PowerShell ([guía](wsl/README.es.md)):
 
 ```powershell
-curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/wsl/install.ps1
+curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/wsl/install.ps1
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usuario de linux> -TimeZone <Area/City>
 ```
 
@@ -43,13 +43,13 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usua
 En Linux, con Distrobox ([guía](distrobox/README.es.md)):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
 ```
 
 En un Ubuntu 16.04, 18.04, 20.04 o 24.04 ya en marcha, como una máquina virtual:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- ubuntu jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- ubuntu jazzy
 ```
 
 En un servidor, desde el navegador: ver la guía de Docker de [Noetic](docker/noetic/README.es.md) o de [Jazzy](docker/jazzy/README.es.md).
@@ -130,13 +130,13 @@ Conviene que los comandos básicos del proyecto no dependan del submódulo: `git
 | Grupo | Qué demuestra | Qué no demuestra |
 |---|---|---|
 | Nativo | `install.sh` y las pruebas de humo en contenedores Ubuntu limpios | |
-| Distrobox | `install.sh distrobox`, sobre podman | El acceso a la GPU |
+| Distrobox | `install.sh distrobox` y las pruebas de humo, sobre podman | |
 | Docker | Construcción de la imagen, comprobación de la contraseña, respuesta de code-server y noVNC, prueba de humo | |
-| WSL | `install.ps1` y las pruebas de humo en un runner de Windows | WSLg y el acceso a la GPU. Se permite que falle, porque los runners alojados no admiten WSL 2 de forma oficial |
+| WSL | `install.ps1` y las pruebas de humo en un runner de Windows | Se permite que falle, porque los runners alojados no admiten WSL 2 de forma oficial |
 
 ## Publicar una versión
 
-1. Actualiza la versión en `install.sh`, `wsl/install.ps1` y los comandos de instalación de los dos README.
+1. Actualiza la versión en `install.sh`, `wsl/install.ps1`, la plantilla de errores y todos los README (`git grep vX.Y.Z`), y pon la versión y la fecha a la sección `[Unreleased]` del changelog.
 2. Fusiona en `main` y espera a las comprobaciones.
 3. `git tag vX.Y.Z && git push origin vX.Y.Z`.
 
