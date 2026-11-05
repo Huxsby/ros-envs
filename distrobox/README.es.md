@@ -18,7 +18,7 @@ Cada caja tiene su propia home, así que `.bashrc`, el workspace, `~/.ros` y lo 
 Necesita `sudo apt install distrobox podman` y, para usar NVIDIA, su controlador ya instalado (`nvidia-smi` funciona). Ejecútalo desde una terminal del escritorio, no por ssh, porque `machine.sh` necesita pantalla para probar la GPU:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
 ```
 
 ### Qué significa el comando
@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh |
 | `-f` | Falla si hay un error HTTP, en vez de pasar la página de error a `bash` |
 | `-s` `-S` | Oculta la barra de progreso, pero sigue mostrando los errores |
 | `-L` | Sigue las redirecciones |
-| `v1.0.1` en la URL | La versión que se descarga. También decide la versión que se instala |
+| `v1.0.2` en la URL | La versión que se descarga. También decide la versión que se instala |
 | `\| bash -s` | Ejecuta lo que escribe `curl`, leyendo el script de la entrada estándar |
 | `--` | Termina las opciones de `bash`: lo que sigue es para el script |
 | `distrobox jazzy` | Orden y entorno: `kinetic`, `melodic`, `noetic` o `jazzy` |

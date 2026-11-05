@@ -2,7 +2,7 @@
 
 Notable changes per version. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [v1.0.2] - 2026-11-05
 
 ### Added
 
@@ -40,5 +40,6 @@ First release.
 - Smoke tests that need no project: Python libraries, a SMACH machine, and a headless simulation where a laser sees a wall and `cmd_vel` moves a robot.
 - CI that installs every environment from scratch, per group and weekly, and scans the history for secrets.
 
+[v1.0.2]: https://github.com/Huxsby/ros-envs/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/Huxsby/ros-envs/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/Huxsby/ros-envs/releases/tag/v1.0.0

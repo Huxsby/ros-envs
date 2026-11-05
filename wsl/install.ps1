@@ -1,14 +1,14 @@
 # Creates a WSL distro with a ROS environment: ROS-Kinetic (Ubuntu 16.04), ROS-Melodic (18.04), ROS-Noetic (20.04)
 # or ROS-Jazzy (24.04).
 # Usage, in PowerShell:
-#   .\install.ps1 -Distro kinetic|melodic|noetic|jazzy -User <linux user> [-TimeZone Area/City] [-Location C:\WSL] [-Ref v1.0.1]
+#   .\install.ps1 -Distro kinetic|melodic|noetic|jazzy -User <linux user> [-TimeZone Area/City] [-Location C:\WSL] [-Ref v1.0.2]
 # It downloads what it needs to a temporary folder and deletes it at the end.
 param(
     [Parameter(Mandatory)][ValidateSet('kinetic', 'melodic', 'noetic', 'jazzy')][string]$Distro,
     [Parameter(Mandatory)][ValidatePattern('^[a-z_][a-z0-9_-]*$')][string]$User,
     [ValidatePattern('^[A-Za-z0-9_+/-]+$')][string]$TimeZone = 'Etc/UTC',
     [string]$Location = (Join-Path $env:USERPROFILE 'WSL'),
-    [string]$Ref = 'v1.0.1',
+    [string]$Ref = 'v1.0.2',
     # Without a password prompt, for unattended runs such as CI
     [switch]$NoPassword
 )

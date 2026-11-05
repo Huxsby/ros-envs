@@ -11,7 +11,7 @@
 *The real output of the Jazzy smoke test on a fresh `ROS-Jazzy` distro, replayed; the report of the machine is left out.*
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
 ```
 
 That is Linux with Distrobox. Windows, an existing Ubuntu and Docker are under [Install](#install).
@@ -34,7 +34,7 @@ Each option below has its own guide, with every part of the commands explained.
 Windows, in PowerShell ([guide](wsl/README.md)):
 
 ```powershell
-curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/wsl/install.ps1
+curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/wsl/install.ps1
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <linux user> -TimeZone <Area/City>
 ```
 
@@ -43,13 +43,13 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <linu
 Linux, with Distrobox ([guide](distrobox/README.md)):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
 ```
 
 An Ubuntu 16.04, 18.04, 20.04 or 24.04 that is already running, such as a virtual machine:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.1/install.sh | bash -s -- ubuntu jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- ubuntu jazzy
 ```
 
 A server, through the browser: see the Docker guide of [Noetic](docker/noetic/README.md) or [Jazzy](docker/jazzy/README.md).
@@ -130,13 +130,13 @@ Avoid depending on the submodule for basic project commands: `git clone` does no
 | Group | What it proves | What it does not prove |
 |---|---|---|
 | Native | `install.sh` and the smoke tests on plain Ubuntu containers | |
-| Distrobox | `install.sh distrobox`, on podman | GPU access |
+| Distrobox | `install.sh distrobox` and the smoke tests, on podman | |
 | Docker | Image build, password check, code-server and noVNC answering, smoke test | |
-| WSL | `install.ps1` and the smoke tests on a Windows runner | WSLg and GPU access. Allowed to fail, because hosted runners do not officially support WSL 2 |
+| WSL | `install.ps1` and the smoke tests on a Windows runner | Allowed to fail, because hosted runners do not officially support WSL 2 |
 
 ## Releasing
 
-1. Update the version in `install.sh`, `wsl/install.ps1` and the install commands of both READMEs.
+1. Update the version in `install.sh`, `wsl/install.ps1`, the bug template and every README (`git grep vX.Y.Z`), and give the `[Unreleased]` section of the changelog its version and date.
 2. Merge to `main` and wait for the checks.
 3. `git tag vX.Y.Z && git push origin vX.Y.Z`.
 
