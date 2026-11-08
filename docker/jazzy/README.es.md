@@ -28,7 +28,7 @@ docker compose up -d
 
 `CODE_PASSWORD` es obligatoria: sin ella el contenedor no arranca, en vez de dejar code-server abierto a cualquiera. Los dos puertos se publican solo en `127.0.0.1` del servidor.
 
-La imagen es `ghcr.io/huxsby/ros-envs-jazzy`, construida por [`image.yml`](../../.github/workflows/image.yml). Para construirla en local, desde esta carpeta: `docker build -f Dockerfile -t ghcr.io/huxsby/ros-envs-jazzy:latest ..` (el contexto es `docker/`, que guarda en `common/` lo que comparte con Jazzy) y `docker compose up -d --pull never`.
+La imagen es `ghcr.io/huxsby/ros-envs-jazzy`, construida por [`image.yml`](../../.github/workflows/image.yml). Para construirla en local, desde esta carpeta: `docker build -f Dockerfile -t ghcr.io/huxsby/ros-envs-jazzy:latest ..` (el contexto es `docker/`, que guarda en `common/` lo que comparte con Noetic) y `docker compose up -d --pull never`.
 
 | Variable | Por defecto | Significado |
 |---|---|---|

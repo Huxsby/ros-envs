@@ -10,7 +10,7 @@ Gracias por ayudar. Las issues y los pull requests son bienvenidos en inglés o 
 - **Algo no funciona:** abre una issue con la plantilla de error. Incluye el anfitrión (WSL 2, Distrobox o Docker), el entorno (Noetic o Jazzy), el comando que ejecutaste y el final de su salida, y el resultado de `bash ros/machine.sh`.
 - **Un cambio grande**, como una distro de ROS o un anfitrión nuevos: abre antes una issue, para acordar el enfoque antes de que le dediques tiempo.
 
-Las issues con la etiqueta [`good first issue`](https://github.com/Huxsby/ros-envs/labels/good%20first%20issue) son pequeñas e independientes.
+Las issues con la etiqueta [`good first issue`](https://github.com/Huxsby/ros-envs/issues?q=is%3Aissue%20label%3A%22good%20first%20issue%22) son pequeñas e independientes. Las cerradas quedan como ejemplo, cada una enlazada al pull request que la resolvió.
 
 ## Qué tiene cabida aquí
 
