@@ -2,7 +2,7 @@
 
 [English](README.md) · **Español**
 
-**ROS 1 (Kinetic, Melodic o Noetic) o ROS 2 Jazzy con Gazebo funcionando en WSL 2, Distrobox o Docker, instalado por un solo script y comprobado con una prueba de humo.**
+**Entornos de ROS y ROS 2 con Gazebo y más, para WSL 2, Distrobox, Docker y Ubuntu, instalados por un solo script y comprobados con una prueba de humo.**
 
 [![Environments](https://github.com/Huxsby/ros-envs/actions/workflows/environments.yml/badge.svg)](https://github.com/Huxsby/ros-envs/actions/workflows/environments.yml) [![Release](https://img.shields.io/github/v/release/Huxsby/ros-envs)](https://github.com/Huxsby/ros-envs/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
