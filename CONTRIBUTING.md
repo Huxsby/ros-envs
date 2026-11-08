@@ -10,7 +10,7 @@ Thanks for helping. Issues and pull requests are welcome in English or Spanish.
 - **Something does not work:** open an issue with the bug template. Include the host (WSL 2, Distrobox or Docker), the environment (Noetic or Jazzy), the command you ran and the end of its output, and the result of `bash ros/machine.sh`.
 - **A larger change**, such as a new ROS distro or host: open an issue first, so we can agree on the approach before you spend time on it.
 
-Issues labelled [`good first issue`](https://github.com/Huxsby/ros-envs/labels/good%20first%20issue) are small and self-contained.
+Issues labelled [`good first issue`](https://github.com/Huxsby/ros-envs/issues?q=is%3Aissue%20label%3A%22good%20first%20issue%22) are small and self-contained. The closed ones stay as examples, each linked to the pull request that solved it.
 
 ## What belongs here
 
