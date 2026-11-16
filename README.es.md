@@ -75,6 +75,28 @@ Los instaladores descargan una versión fija a una carpeta temporal y la borran 
 - **Herramientas**: `gh`, `tmux`, `zip`, `shellcheck` y `pyflakes`.
 - **Ajustes del equipo**: `ros/machine.sh` elige cómo renderizar y cuántos trabajos de compilación usar.
 
+## Actualizar
+
+**Paquetes.** `sudo apt update && sudo apt upgrade`, como en cualquier Ubuntu. Kinetic, Melodic y Noetic están congelados, así que ahí casi nada cambia. Jazzy recibe paquetes nuevos cada pocas semanas, compatibles dentro de la versión: después, recompila el workspace (`colcon build`). Nunca ejecutes `do-release-upgrade`: cada entorno va ligado a su versión de Ubuntu, y en la siguiente su ROS no tiene paquetes.
+
+**Una versión nueva de estos entornos.** Normalmente no hay que hacer nada: [CHANGELOG.md](CHANGELOG.md) dice cuándo una versión cambia un entorno ya instalado, y qué hacer. Para aplicarla, vuelve a ejecutar el instalador: los comandos de abajo usan la última versión. Puede ejecutarse sobre un entorno ya instalado: conserva la home y el workspace, y solo añade las líneas de `.bashrc` que falten. Eso sí, vuelve a compilar el workspace (`catkin_make` o `colcon build`), así que un paquete que no compile lo detiene. También vuelve a detectar el equipo: si habías forzado un render con `ros/machine.sh --save software` (o una tarjeta), repítelo después.
+
+| Anfitrión | Comando |
+|---|---|
+| Distrobox | `curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh \| bash -s -- distrobox jazzy`: reutiliza la caja |
+| Ubuntu ya instalado | `curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh \| bash -s -- ubuntu jazzy` |
+| WSL | Dentro de la distro, los dos pasos de abajo |
+| Docker | `docker compose pull && docker compose up -d` en su carpeta: la home es un volumen y se queda. `IMAGE_TAG` en `.env` la mantiene en una versión |
+
+`wsl/install.ps1` solo crea distros nuevas. Dentro de una que ya existe, ejecuta el paso de root con su zona horaria actual, que si no volvería a UTC, y después el de usuario:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | sudo bash -s -- root jazzy "$USER" "$(cat /etc/timezone)"
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- user jazzy
+```
+
+Para empezar de cero, guarda antes la distro con `wsl --export ROS-Jazzy ros-jazzy.tar` en PowerShell; después, `wsl --unregister ROS-Jazzy` y vuelve a instalar.
+
 ## Detección del equipo
 
 `ros/machine.sh` se ejecuta al instalar y escribe `~/.config/ros-envs/machine.sh`, que carga `~/.bashrc`. Hay que repetirlo al pasar a otro equipo o al cambiar el controlador de la GPU o `.wslconfig`.
@@ -136,9 +158,9 @@ Conviene que los comandos básicos del proyecto no dependan del submódulo: `git
 
 ## Publicar una versión
 
-1. Actualiza la versión en `install.sh`, `wsl/install.ps1`, la plantilla de errores y todos los README (`git grep vX.Y.Z`), y pon la versión y la fecha a la sección `[Unreleased]` del changelog.
+1. Actualiza la versión en `install.sh`, `wsl/install.ps1`, la plantilla de errores y todos los README (`git grep vX.Y.Z`), y pon la versión y la fecha a la sección `[Unreleased]` del changelog. Si la versión cambia un entorno ya instalado, di ahí qué tiene que hacer quien lo use: volver a ejecutar el instalador o un comando.
 2. Fusiona en `main` y espera a las comprobaciones.
-3. `git tag vX.Y.Z && git push origin vX.Y.Z`.
+3. `git tag vX.Y.Z && git push origin vX.Y.Z`. La etiqueta también publica las imágenes de Docker como `:vX.Y.Z`.
 
 ## Contribuir
 

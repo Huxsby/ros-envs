@@ -2,6 +2,17 @@
 
 Notable changes per version. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- An Updating section in the README: packages with `apt`, and how to apply a new version on each host, with the time zone kept on WSL.
+- Each release tag publishes the Docker images as `:vX.Y.Z` as well, starting with this release. `IMAGE_TAG` in `.env` keeps a server on one of them.
+
+### Changed
+
+- Tagging a release no longer cancels an image build of `main` that is still running.
+
 ## [v1.0.2] - 2026-11-05
 
 ### Added
