@@ -18,12 +18,12 @@ That is Linux with Distrobox. Windows, an existing Ubuntu and Docker are under [
 
 Three kinds of host:
 
-| Environment | Ubuntu | ROS | Simulator | Python | WSL | Distrobox | Docker |
+| Environment | Ubuntu | ROS | Simulator | Python | [WSL](wsl/README.md) | [Distrobox](distrobox/README.md) | Docker |
 |---|---|---|---|---|---|---|---|
 | Kinetic | 16.04 | ROS 1 Kinetic (EOL April 2021) | Gazebo 7 (Classic) | 2.7 | `ROS-Kinetic` | `ros-kinetic` | |
 | Melodic | 18.04 | ROS 1 Melodic (EOL May 2023) | Gazebo 9 (Classic) | 2.7 | `ROS-Melodic` | `ros-melodic` | |
-| Noetic | 20.04 | ROS 1 Noetic (EOL May 2025) | Gazebo 11 (Classic) | 3.8 | `ROS-Noetic` | `ros-noetic` | `docker/noetic` |
-| Jazzy | 24.04 | ROS 2 Jazzy (LTS until May 2029) | Gazebo Harmonic | 3.12 | `ROS-Jazzy` | `ros-jazzy` | `docker/jazzy` |
+| Noetic | 20.04 | ROS 1 Noetic (EOL May 2025) | Gazebo 11 (Classic) | 3.8 | `ROS-Noetic` | `ros-noetic` | [`docker/noetic`](docker/noetic/README.md) |
+| Jazzy | 24.04 | ROS 2 Jazzy (LTS until May 2029) | Gazebo Harmonic | 3.12 | `ROS-Jazzy` | `ros-jazzy` | [`docker/jazzy`](docker/jazzy/README.md) |
 
 No two environments share an Ubuntu release: each ROS release is built for one, and ROS 1 has no packages for 22.04 or later. Each environment therefore lives on its own, with its own packages, `.bashrc` and workspace (`~/catkin_ws` or `~/ros2_ws`). Kinetic and Melodic are for code that has to run where those releases still do, such as a course virtual machine: see [Kinetic and Melodic](#kinetic-and-melodic).
 
