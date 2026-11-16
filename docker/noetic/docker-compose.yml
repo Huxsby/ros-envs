@@ -1,7 +1,7 @@
 name: ros-noetic
 services:
   ros-noetic:
-    image: ghcr.io/huxsby/ros-envs-noetic:latest   # built by GitHub Actions (.github/workflows/image.yml)
+    image: ghcr.io/huxsby/ros-envs-noetic:${IMAGE_TAG:-latest}   # built by GitHub Actions (.github/workflows/image.yml)
     pull_policy: always
     container_name: ros-noetic
     hostname: ros-noetic

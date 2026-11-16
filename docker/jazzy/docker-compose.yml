@@ -1,7 +1,7 @@
 name: ros-jazzy
 services:
   ros-jazzy:
-    image: ghcr.io/huxsby/ros-envs-jazzy:latest   # built by GitHub Actions (.github/workflows/image.yml)
+    image: ghcr.io/huxsby/ros-envs-jazzy:${IMAGE_TAG:-latest}   # built by GitHub Actions (.github/workflows/image.yml)
     pull_policy: always
     container_name: ros-jazzy
     hostname: ros-jazzy

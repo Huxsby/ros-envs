@@ -28,7 +28,7 @@ docker compose up -d
 
 `CODE_PASSWORD` es obligatoria: sin ella el contenedor no arranca, en vez de dejar code-server abierto a cualquiera. Los dos puertos se publican solo en `127.0.0.1` del servidor.
 
-La imagen es `ghcr.io/huxsby/ros-envs-jazzy`, construida por [`image.yml`](../../.github/workflows/image.yml). Para construirla en local, desde esta carpeta: `docker build -f Dockerfile -t ghcr.io/huxsby/ros-envs-jazzy:latest ..` (el contexto es `docker/`, que guarda en `common/` lo que comparte con Noetic) y `docker compose up -d --pull never`.
+La imagen es `ghcr.io/huxsby/ros-envs-jazzy`, construida por [`image.yml`](../../.github/workflows/image.yml). Para construirla en local, desde esta carpeta: `docker build -f Dockerfile -t ghcr.io/huxsby/ros-envs-jazzy:latest ..` (el contexto es `docker/`, que guarda en `common/` lo que comparte con Noetic) y `docker compose up -d --pull never`. Cada push a `main` publica `:latest`, y cada versión publica además `:vX.Y.Z`, que ya no cambia. `docker compose up -d` vuelve a descargar la imagen cada vez, así que con `latest` pasa a la más reciente.
 
 | Variable | Por defecto | Significado |
 |---|---|---|
@@ -36,6 +36,7 @@ La imagen es `ghcr.io/huxsby/ros-envs-jazzy`, construida por [`image.yml`](../..
 | `VNC_PASSWORD` | vacía | Segunda contraseña para noVNC; solo cuentan 8 caracteres |
 | `VNC_GEOMETRY` | `1600x1000` | Tamaño del escritorio |
 | `TZ` | `Etc/UTC` | Zona horaria |
+| `IMAGE_TAG` | `latest` | Versión de la imagen: `latest`, o una versión publicada (`vX.Y.Z`) para quedarse en ella o volver a ella |
 
 Para usar otro nombre de usuario, cambia a la vez `CONTAINER_USER` y el destino del volumen en `docker-compose.yml`, porque deben coincidir.
 

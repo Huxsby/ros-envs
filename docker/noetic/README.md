@@ -28,7 +28,7 @@ docker compose up -d
 
 `CODE_PASSWORD` is required: without it the container refuses to start, instead of opening code-server to anyone. Both ports are published on `127.0.0.1` of the server only.
 
-The image is `ghcr.io/huxsby/ros-envs-noetic`, built by [`image.yml`](../../.github/workflows/image.yml). To build it locally, from this folder: `docker build -f Dockerfile -t ghcr.io/huxsby/ros-envs-noetic:latest ..` (the context is `docker/`, which holds the files shared with Jazzy in `common/`) and `docker compose up -d --pull never`.
+The image is `ghcr.io/huxsby/ros-envs-noetic`, built by [`image.yml`](../../.github/workflows/image.yml). To build it locally, from this folder: `docker build -f Dockerfile -t ghcr.io/huxsby/ros-envs-noetic:latest ..` (the context is `docker/`, which holds the files shared with Jazzy in `common/`) and `docker compose up -d --pull never`. A push to `main` publishes `:latest`, and each release also publishes `:vX.Y.Z`, which never changes afterwards. `docker compose up -d` downloads the image again each time, so with `latest` it moves to the newest one.
 
 | Variable | Default | Meaning |
 |---|---|---|
@@ -36,6 +36,7 @@ The image is `ghcr.io/huxsby/ros-envs-noetic`, built by [`image.yml`](../../.git
 | `VNC_PASSWORD` | empty | Second password for noVNC; only 8 characters count |
 | `VNC_GEOMETRY` | `1600x1000` | Desktop size |
 | `TZ` | `Etc/UTC` | Time zone |
+| `IMAGE_TAG` | `latest` | Image version: `latest`, or a release (`vX.Y.Z`) to stay on it or go back to it |
 
 To use another user name, change both `CONTAINER_USER` and the volume destination in `docker-compose.yml`, because they must match.
 
