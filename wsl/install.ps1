@@ -8,7 +8,8 @@ param(
     [Parameter(Mandatory)][ValidatePattern('^[a-z_][a-z0-9_-]*$')][string]$User,
     [ValidatePattern('^[A-Za-z0-9_+/-]+$')][string]$TimeZone = 'Etc/UTC',
     [string]$Location = (Join-Path $env:USERPROFILE 'WSL'),
-    [string]$Ref = 'v1.0.2',
+    # it goes inside a bash -c command and a URL: only the characters of a tag, branch or commit
+    [ValidatePattern('^[A-Za-z0-9._/-]+$')][string]$Ref = 'v1.0.2',
     # Without a password prompt, for unattended runs such as CI
     [switch]$NoPassword
 )
@@ -36,6 +37,7 @@ if ($Existing -contains $Name) { throw "$Name already exists. To start over: wsl
 
 $Temporary = Join-Path ([IO.Path]::GetTempPath()) "ros-envs-$([Guid]::NewGuid())"
 New-Item -ItemType Directory -Path $Temporary | Out-Null
+$Imported = $false
 try {
     Write-Host "== Downloading the Ubuntu image of $Name"
     $Image = Join-Path $Temporary 'image'
@@ -53,6 +55,7 @@ try {
     New-Item -ItemType Directory -Force -Path $Target | Out-Null
     # wsl prints its own success message in the language of Windows: left out, the script reports each step
     Invoke-Wsl --import $Name $Target $Image --version 2 | Out-Null
+    $Imported = $true
 
     # The 16.04 and 18.04 images date from 2019: their root certificates may not validate GitHub, where the installer
     # comes from, until updated
@@ -73,6 +76,12 @@ try {
     Write-Host "== $Name is ready"
     Write-Host "   Enter it:            wsl -d $Name"
     Write-Host "   Then check it with:  git clone https://github.com/Huxsby/ros-envs.git && bash ros-envs/ros/$Distro/smoke-test.sh"
+}
+catch {
+    # a failed step (such as an unknown time zone in the root step) leaves the distro half installed, and a new run
+    # stops because it already exists
+    if ($Imported) { Write-Host "== $Name is half installed. To start over: wsl --unregister $Name, then run this again" }
+    throw
 }
 finally {
     Remove-Item -Recurse -Force $Temporary -ErrorAction SilentlyContinue
