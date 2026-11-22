@@ -10,6 +10,8 @@ TIME_ZONE="${2:-Etc/UTC}"
 [ "$(. /etc/os-release && echo "$VERSION_CODENAME")" = noble ] || { echo "This is not Ubuntu 24.04 (noble)"; exit 1; }
 
 if grep -qi microsoft /proc/sys/kernel/osrelease; then
+  # a wrong name would leave /etc/localtime pointing at nothing, and the clock at UTC, with no error
+  [ -f "/usr/share/zoneinfo/$TIME_ZONE" ] || { echo "Unknown time zone: $TIME_ZONE (see the names in /usr/share/zoneinfo)" >&2; exit 2; }
   echo "== User and wsl.conf"
   if ! id "$USER_NAME" >/dev/null 2>&1; then
     useradd -m -s /bin/bash -G sudo,adm,video,render,plugdev,dialout "$USER_NAME"
