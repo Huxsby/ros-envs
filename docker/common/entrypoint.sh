@@ -4,6 +4,10 @@ set -e
 
 # Without a password code-server would start open: better not to start (CODE_PASSWORD in .env)
 [ -n "$PASSWORD" ] || { echo "ERROR: CODE_PASSWORD is missing" >&2; exit 1; }
+# A wrong TZ name leaves the clock at UTC with no error. Only a warning: a typo should not stop a working server
+if [ -n "${TZ:-}" ] && [ ! -f "/usr/share/zoneinfo/${TZ#:}" ]; then
+  echo "WARNING: unknown time zone TZ=$TZ, the clock stays at UTC (see the names in /usr/share/zoneinfo)" >&2
+fi
 
 # User: its name comes in CONTAINER_USER, it is not in the image. Its home is the volume
 U="${CONTAINER_USER:-ros}"

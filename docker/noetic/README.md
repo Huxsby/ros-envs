@@ -35,7 +35,7 @@ The image is `ghcr.io/huxsby/ros-envs-noetic`, built by [`image.yml`](../../.git
 | `CODE_PASSWORD` | required | Password of code-server |
 | `VNC_PASSWORD` | empty | Second password for noVNC; only 8 characters count |
 | `VNC_GEOMETRY` | `1600x1000` | Desktop size |
-| `TZ` | `Etc/UTC` | Time zone |
+| `TZ` | `Etc/UTC` | Time zone, such as `Europe/Madrid`. An unknown name leaves the clock at UTC and warns in `docker compose logs` |
 | `IMAGE_TAG` | `latest` | Image version: `latest`, or a release (`vX.Y.Z`) to stay on it or go back to it |
 
 To use another user name, change both `CONTAINER_USER` and the volume destination in `docker-compose.yml`, because they must match.
