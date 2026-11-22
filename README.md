@@ -109,7 +109,7 @@ bash ros/machine.sh --jobs           # print the number of compile jobs
 ```
 
 - **GPU.** It tries NVIDIA, AMD and Intel in that order and keeps the first that really renders with acceleration, because `d3d12` on WSL does not work on every machine. Otherwise it falls back to software rendering, which is slower but stable. On WSL, Kinetic and Melodic always render by software: the `d3d12` driver arrived in Mesa 21, after Ubuntu 18.04.
-- **Compile jobs.** One per core, with at most one per 2 GB of memory: a ROS `g++` takes 1-2 GB, and running out of memory kills the build without saying why.
+- **Compile jobs.** One per core, with at most one per 2 GB of memory: a ROS `g++` takes 1-2 GB, and running out of memory kills the build without saying why. In a container (`DBX_FLAGS="--memory 4g"`, `docker run --cpus 2`) its memory and CPU limits count instead of the machine's.
 - **Why it matters more on Jazzy.** The Noetic laser in the smoke test is computed by the CPU. On Gazebo Harmonic the usual laser, `gpu_lidar`, is rendered, so without a GPU the simulation itself runs slower, not only its window.
 
 ## Smoke tests

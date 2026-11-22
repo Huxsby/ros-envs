@@ -13,6 +13,17 @@ Notable changes per version. Versions follow [Semantic Versioning](https://semve
 
 - Tagging a release no longer cancels an image build of `main` that is still running.
 
+### Fixed
+
+- `install.sh` and `distrobox/create.sh` reject an unknown command, a mistyped option or a leftover argument with exit code 2, before downloading anything or creating a box. Before, some of these calls ended with 0 without doing what was asked. ([#9](https://github.com/Huxsby/ros-envs/pull/9), by [@R2DeezNuts](https://github.com/R2DeezNuts))
+- `--link` links folders whose name has a single quote. ([#9](https://github.com/Huxsby/ros-envs/pull/9), by [@R2DeezNuts](https://github.com/R2DeezNuts))
+- On WSL, the root step stops with exit code 2 on an unknown time zone, instead of leaving `/etc/localtime` broken and the clock at UTC. ([#9](https://github.com/Huxsby/ros-envs/pull/9), by [@R2DeezNuts](https://github.com/R2DeezNuts))
+- `ros/machine.sh` counts the memory and CPU limits of a container (Distrobox with `DBX_FLAGS`, Docker), so that a build within them does not run out of memory. ([#9](https://github.com/Huxsby/ros-envs/pull/9), by [@R2DeezNuts](https://github.com/R2DeezNuts))
+- `ros/machine.sh` also rejects a leftover argument, and its report says when a container limit applies.
+- `wsl/install.ps1` says how to start over when a step fails after the import, and only accepts tag, branch or commit characters in `-Ref`.
+- The Docker images warn about an unknown `TZ` in their log.
+- CI checks the rejected arguments, `--link` and the container limits in the lint job, and the time zone of the Docker images.
+
 ## [v1.0.2] - 2026-11-05
 
 ### Added

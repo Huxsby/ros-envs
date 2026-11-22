@@ -109,7 +109,7 @@ bash ros/machine.sh --jobs           # escribe el número de trabajos de compila
 ```
 
 - **GPU.** Prueba NVIDIA, AMD e Intel, por ese orden, y se queda con la primera que renderiza de verdad con aceleración, porque `d3d12` en WSL no funciona en todos los equipos. Si ninguna sirve, usa render por software, más lento pero estable. En WSL, Kinetic y Melodic siempre renderizan por software: el controlador `d3d12` llegó con Mesa 21, después de Ubuntu 18.04.
-- **Trabajos de compilación.** Uno por núcleo, y como mucho uno por cada 2 GB de memoria: un `g++` de ROS ocupa 1-2 GB, y si se acaba la memoria la compilación muere sin decir por qué.
+- **Trabajos de compilación.** Uno por núcleo, y como mucho uno por cada 2 GB de memoria: un `g++` de ROS ocupa 1-2 GB, y si se acaba la memoria la compilación muere sin decir por qué. En un contenedor (`DBX_FLAGS="--memory 4g"`, `docker run --cpus 2`) cuentan sus límites de memoria y CPU en lugar de los del equipo.
 - **Por qué importa más en Jazzy.** El láser de la prueba de humo de Noetic lo calcula la CPU. En Gazebo Harmonic el láser habitual, `gpu_lidar`, se renderiza, así que sin GPU va más lenta la propia simulación, no solo su ventana.
 
 ## Pruebas de humo
