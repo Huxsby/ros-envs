@@ -8,7 +8,10 @@
 #        DBX_FLAGS="--memory 4g" bash distrobox/create.sh noetic   (extra options for podman/docker)
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+usage() { sed -n '6,8s/^# *//p' "$0"; }
 DISTRO=${1:-}
+# only --link DIR may follow the distro: a mistyped option must not create the box without the project
+[ $# -le 1 ] || { [ "$2" = --link ] && [ $# -le 3 ]; } || { usage >&2; exit 2; }
 PROJECT=
 [ "${2:-}" != --link ] || PROJECT=$(cd "${3:?--link needs a folder}" && pwd)
 case $DISTRO in
@@ -16,7 +19,7 @@ case $DISTRO in
   melodic) IMAGE=docker.io/library/ubuntu:18.04 ;;
   noetic) IMAGE=docker.io/library/ubuntu:20.04 ;;
   jazzy) IMAGE=docker.io/library/ubuntu:24.04 ;;
-  *) sed -n '6,8s/^# *//p' "$0"; exit 2 ;;
+  *) usage >&2; exit 2 ;;
 esac
 BOX=ros-$DISTRO
 BOX_HOME=${DISTROBOX_HOMES:-$HOME/distrobox}/$BOX
