@@ -44,7 +44,7 @@ distrobox enter "$BOX" -- sudo bash "$ROOT/ros/$DISTRO/setup-root.sh" "$USER"
 distrobox enter "$BOX" -- bash "$ROOT/ros/$DISTRO/setup-user.sh"
 if [ -n "$PROJECT" ]; then
   # the project stays on the host: it is edited from outside or inside the box
-  distrobox enter "$BOX" -- bash -c "mkdir -p ~/projects && ln -sfn '$PROJECT' ~/projects/'$(basename "$PROJECT")'"
+  distrobox enter "$BOX" -- bash -c 'mkdir -p ~/projects && ln -sfn "$1" ~/projects/"$(basename "$1")"' _ "$PROJECT"
   [ ! -f "$PROJECT/Makefile" ] || distrobox enter "$BOX" -- make --no-print-directory -C "$PROJECT" build
 fi
 
