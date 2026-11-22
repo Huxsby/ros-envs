@@ -11,7 +11,7 @@
 *La salida real de la prueba de humo de Jazzy en una distro `ROS-Jazzy` recién instalada, reproducida; se omite el informe del equipo.*
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh | bash -s -- distrobox jazzy
 ```
 
 Eso es Linux con Distrobox. Windows, un Ubuntu existente y Docker están en [Instalación](#instalación).
@@ -34,7 +34,7 @@ Cada opción tiene su propia guía, con todas las partes de los comandos explica
 En Windows, con PowerShell ([guía](wsl/README.es.md)):
 
 ```powershell
-curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/wsl/install.ps1
+curl.exe -fLO https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/wsl/install.ps1
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usuario de linux> -TimeZone <Area/City>
 ```
 
@@ -43,13 +43,13 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Distro jazzy -User <usua
 En Linux, con Distrobox ([guía](distrobox/README.es.md)):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- distrobox jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh | bash -s -- distrobox jazzy
 ```
 
 En un Ubuntu 16.04, 18.04, 20.04 o 24.04 ya en marcha, como una máquina virtual:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- ubuntu jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh | bash -s -- ubuntu jazzy
 ```
 
 En un servidor, desde el navegador: ver la guía de Docker de [Noetic](docker/noetic/README.es.md) o de [Jazzy](docker/jazzy/README.es.md).
@@ -83,16 +83,16 @@ Los instaladores descargan una versión fija a una carpeta temporal y la borran 
 
 | Anfitrión | Comando |
 |---|---|
-| Distrobox | `curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh \| bash -s -- distrobox jazzy`: reutiliza la caja |
-| Ubuntu ya instalado | `curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh \| bash -s -- ubuntu jazzy` |
+| Distrobox | `curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh \| bash -s -- distrobox jazzy`: reutiliza la caja |
+| Ubuntu ya instalado | `curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh \| bash -s -- ubuntu jazzy` |
 | WSL | Dentro de la distro, los dos pasos de abajo |
 | Docker | `docker compose pull && docker compose up -d` en su carpeta: la home es un volumen y se queda. `IMAGE_TAG` en `.env` la mantiene en una versión |
 
 `wsl/install.ps1` solo crea distros nuevas. Dentro de una que ya existe, ejecuta el paso de root con su zona horaria actual, que si no volvería a UTC, y después el de usuario:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | sudo bash -s -- root jazzy "$USER" "$(cat /etc/timezone)"
-curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.2/install.sh | bash -s -- user jazzy
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh | sudo bash -s -- root jazzy "$USER" "$(cat /etc/timezone)"
+curl -fsSL https://raw.githubusercontent.com/Huxsby/ros-envs/v1.0.3/install.sh | bash -s -- user jazzy
 ```
 
 Para empezar de cero, guarda antes la distro con `wsl --export ROS-Jazzy ros-jazzy.tar` en PowerShell; después, `wsl --unregister ROS-Jazzy` y vuelve a instalar.
