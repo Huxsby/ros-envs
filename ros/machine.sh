@@ -11,13 +11,17 @@ set -uo pipefail
 SAVED_FILE=$HOME/.config/ros-envs/machine.sh
 MODE=report
 GPU=auto
+usage() { echo "usage: machine.sh [--report | --save [auto|software|NVIDIA|AMD|Intel|...] | --jobs | --help]" >&2; exit 2; }
 case "${1:-}" in
-  ""|--report) ;;
-  --save) MODE=save; GPU=${2:-auto} ;;
-  --jobs) MODE="jobs" ;;
+  ""|--report) MAX_ARGS=1 ;;
+  --save) MODE=save; GPU=${2:-auto}; MAX_ARGS=2 ;;
+  --jobs) MODE="jobs"; MAX_ARGS=1 ;;
   -h|--help) sed -n '5,9s/^# \{0,1\}//p' "$0"; exit 0 ;;
-  *) echo "usage: machine.sh [--report | --save [auto|software|NVIDIA|AMD|Intel|...] | --jobs | --help]" >&2; exit 2 ;;
+  *) usage ;;
 esac
+# a leftover argument or an option in place of the GPU is a typo: say so instead of ignoring it
+[ $# -le "$MAX_ARGS" ] || usage
+case $GPU in -*) usage ;; esac
 
 ON_WSL=false
 grep -qi microsoft /proc/sys/kernel/osrelease && ON_WSL=true
@@ -30,6 +34,8 @@ MEMORY_GB=$(awk '/^MemTotal/ {printf "%d", $2 / 1048576 + 0.5}' /proc/meminfo)
 # holds it. v2 has memory.max and cpu.max, v1 has the files in the else branch. Without a limit they say "max",
 # "-1" or a huge number, and the CPU quota and period must both be numbers.
 CG=/sys/fs/cgroup
+MEMORY_LIMITED=false
+CORES_NOTE=
 if [ -f "$CG/memory.max" ]; then
   LIMIT_MEM=$(cat "$CG/memory.max" 2>/dev/null)
   read -r LIMIT_QUOTA LIMIT_PERIOD < <(cat "$CG/cpu.max" 2>/dev/null)
@@ -40,12 +46,12 @@ else
 fi
 if [[ ${LIMIT_MEM:-} =~ ^[0-9]+$ ]]; then
   LIMIT_GB=$(( (LIMIT_MEM / 1048576 + 512) / 1024 ))
-  [ "$LIMIT_GB" -ge "$MEMORY_GB" ] || MEMORY_GB=$LIMIT_GB
+  [ "$LIMIT_GB" -ge "$MEMORY_GB" ] || { MEMORY_GB=$LIMIT_GB; MEMORY_LIMITED=true; }
 fi
 if [[ ${LIMIT_QUOTA:-} =~ ^[0-9]+$ && ${LIMIT_PERIOD:-} =~ ^[1-9][0-9]*$ ]]; then
   LIMIT_CPUS=$((LIMIT_QUOTA / LIMIT_PERIOD))
   [ "$LIMIT_CPUS" -ge 1 ] || LIMIT_CPUS=1
-  [ "$LIMIT_CPUS" -ge "$CORES" ] || CORES=$LIMIT_CPUS
+  [ "$LIMIT_CPUS" -ge "$CORES" ] || { CORES=$LIMIT_CPUS; CORES_NOTE=" (container limit)"; }
 fi
 # Compile jobs: one per core, but at most one per 2 GB, because a ROS g++ takes 1-2 GB. With more, memory runs out
 # and WSL (or the Linux OOM killer) kills the build without saying why.
@@ -135,7 +141,8 @@ export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe"
 esac
 
 WHERE=$($ON_WSL && echo "for WSL" || echo "on this machine")
-echo "CPU:      ${CPU:-unknown}, $CORES threads"
+! $MEMORY_LIMITED || WHERE="in this container"
+echo "CPU:      ${CPU:-unknown}, $CORES threads$CORES_NOTE"
 echo "Memory:   $MEMORY_GB GB $WHERE -> $JOBS compile jobs"
 echo "Render:   $SUMMARY"
 if $ON_WSL && [ "$MEMORY_GB" -lt 6 ]; then
