@@ -22,6 +22,13 @@ DISTRO=${2:-}
 case $COMMAND in -h|--help) usage; exit 0 ;; esac
 case $DISTRO in kinetic|melodic|noetic|jazzy) ;; *) usage >&2; exit 2 ;; esac
 shift 2
+# each command takes a fixed set of arguments: reject a typo before anything is downloaded
+case $COMMAND in
+  ubuntu|user) [ $# -eq 0 ] ;;
+  root) [ $# -ge 1 ] && [ $# -le 2 ] ;;
+  distrobox) [ $# -eq 0 ] || { [ $# -eq 2 ] && [ "$1" = --link ]; } ;;
+  *) false ;;
+esac || { usage >&2; exit 2; }
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]:-.}")" 2>/dev/null && pwd)
 if [ -f "$HERE/ros/$DISTRO/setup-root.sh" ]; then
@@ -45,5 +52,4 @@ case $COMMAND in
   distrobox) bash "$ROOT/distrobox/create.sh" "$DISTRO" "$@" ;;
   root) bash "$ROOT/ros/$DISTRO/setup-root.sh" "$@" ;;
   user) bash "$ROOT/ros/$DISTRO/setup-user.sh" ;;
-  *) echo "unknown command: $COMMAND" >&2; exit 2 ;;
 esac
