@@ -26,6 +26,27 @@ grep -qi microsoft /proc/sys/kernel/osrelease && ON_WSL=true
 CORES=$(nproc)
 CPU=$(sed -n 's/^model name[[:space:]]*:[[:space:]]*//p' /proc/cpuinfo | head -1)
 MEMORY_GB=$(awk '/^MemTotal/ {printf "%d", $2 / 1048576 + 0.5}' /proc/meminfo)
+# A container limit (docker --memory and --cpus, DBX_FLAGS) changes neither /proc/meminfo nor nproc: the cgroup
+# holds it. v2 has memory.max and cpu.max, v1 has the files in the else branch. Without a limit they say "max",
+# "-1" or a huge number, and the CPU quota and period must both be numbers.
+CG=/sys/fs/cgroup
+if [ -f "$CG/memory.max" ]; then
+  LIMIT_MEM=$(cat "$CG/memory.max" 2>/dev/null)
+  read -r LIMIT_QUOTA LIMIT_PERIOD < <(cat "$CG/cpu.max" 2>/dev/null)
+else
+  LIMIT_MEM=$(cat "$CG/memory/memory.limit_in_bytes" 2>/dev/null)
+  LIMIT_QUOTA=$(cat "$CG/cpu/cpu.cfs_quota_us" 2>/dev/null)
+  LIMIT_PERIOD=$(cat "$CG/cpu/cpu.cfs_period_us" 2>/dev/null)
+fi
+if [[ ${LIMIT_MEM:-} =~ ^[0-9]+$ ]]; then
+  LIMIT_GB=$(( (LIMIT_MEM / 1048576 + 512) / 1024 ))
+  [ "$LIMIT_GB" -ge "$MEMORY_GB" ] || MEMORY_GB=$LIMIT_GB
+fi
+if [[ ${LIMIT_QUOTA:-} =~ ^[0-9]+$ && ${LIMIT_PERIOD:-} =~ ^[1-9][0-9]*$ ]]; then
+  LIMIT_CPUS=$((LIMIT_QUOTA / LIMIT_PERIOD))
+  [ "$LIMIT_CPUS" -ge 1 ] || LIMIT_CPUS=1
+  [ "$LIMIT_CPUS" -ge "$CORES" ] || CORES=$LIMIT_CPUS
+fi
 # Compile jobs: one per core, but at most one per 2 GB, because a ROS g++ takes 1-2 GB. With more, memory runs out
 # and WSL (or the Linux OOM killer) kills the build without saying why.
 JOBS=$((MEMORY_GB / 2))
