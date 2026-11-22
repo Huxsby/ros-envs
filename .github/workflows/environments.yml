@@ -84,6 +84,9 @@ jobs:
           $errors = $null
           [void][System.Management.Automation.Language.Parser]::ParseFile("$PWD/wsl/install.ps1", [ref]$null, [ref]$errors)
           if ($errors) { $errors; exit 1 }
+      # Wrong arguments must stop the installers before any download, and machine.sh must keep to container limits
+      - name: Argument checks
+        run: bash ci/args.sh
 
   native:
     needs: changes
